@@ -147,6 +147,8 @@ public class VueControleurPacMan extends JFrame implements Observer {
     }
 
     private void placerLesComposantsGraphiques() {
+        ImageIcon icon = new ImageIcon("Images/icone.png");
+        setIconImage(icon.getImage());
         Color color = new Color(255,255,255,255);
         setTitle("PacMan");
         setSize(sizeX*40, sizeY*40);
