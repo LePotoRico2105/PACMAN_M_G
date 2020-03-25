@@ -14,12 +14,17 @@ import java.util.Random;
 public class Fantome extends Entite {
 
     private Random r = new Random();
+    private String color;
 
-    public Fantome(Jeu _jeu) {
+    public Fantome(Jeu _jeu, String p_color) {
         super(_jeu);
-
+        color = p_color;
     }
-
+    
+    public String getColor(){
+        return color;
+    }
+    
     @Override
     public void choixDirection() {
         
