@@ -20,17 +20,13 @@ public abstract class Entite implements Runnable {
         jeu.deplacerEntite(this, d);
     }
     
-    
     public Entite(Jeu _jeu) {
         jeu = _jeu;
     }
-    
-    
     
     @Override
     public void run() {
         choixDirection();
         avancerDirectionChoisie();
     }
-    
 }
