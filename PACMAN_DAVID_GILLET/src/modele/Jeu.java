@@ -19,8 +19,8 @@ import java.util.logging.Logger;
  */
 public class Jeu extends Observable implements Runnable {
 
-    public static final int SIZE_X = 10;
-    public static final int SIZE_Y = 10;
+    public static final int SIZE_X = 20;
+    public static final int SIZE_Y = 20;
 
     private Pacman pm;
 
@@ -62,6 +62,7 @@ public class Jeu extends Observable implements Runnable {
         map.put(rose, new Point(0, 1));
         map.put(rouge, new Point(0, 2));
         map.put(orange, new Point(0, 3));
+        
     }
     
     
@@ -136,6 +137,10 @@ public class Jeu extends Observable implements Runnable {
 
         new Thread(this).start();
 
+    }
+    
+    public void chargerMap(){
+        
     }
 
     @Override

@@ -2,6 +2,7 @@ package VueControleur;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -60,6 +61,9 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private ImageIcon icoPastilleL;
     private ImageIcon icoLogoTransparent;
     private ImageIcon icoLogoCouleur;
+    private ImageIcon icoMurDroit;
+    private ImageIcon icoMurFin;
+    private ImageIcon icoMurAngle;
     private ImageIcon icoCouloir;
 
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associé à une icône, suivant ce qui est présent dans la partie modèle)
@@ -125,6 +129,9 @@ public class VueControleurPacMan extends JFrame implements Observer {
         icoLogoTransparent = chargerIcone("Images/logoTransparent.png");
         icoLogoCouleur = chargerIcone("Images/logoCouleur.png");
         icoCouloir = chargerIcone("Images/couloir.png");
+        icoMurDroit = chargerIcone("Images/murDroit.png");
+        icoMurFin = chargerIcone("Images/murFin.png");
+        icoMurAngle = chargerIcone("Images/murAngle.png");
     }
 
     private ImageIcon chargerIcone(String urlIcone) {
@@ -142,7 +149,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private void placerLesComposantsGraphiques() {
         Color color = new Color(255,255,255,255);
         setTitle("PacMan");
-        setSize(650, 650);
+        setSize(sizeX*40, sizeY*40);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
 
         JComponent grilleJLabels = new JPanel(new GridLayout(sizeX, sizeY)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
