@@ -50,11 +50,18 @@ public class Jeu extends Observable implements Runnable {
         grilleEntites[2][0] = pm;
         map.put(pm, new Point(2, 0));
         
-        Fantome f = new Fantome(this);
-        grilleEntites[0][0] = f;
-        map.put(f, new Point(0, 0));
-        
-        
+        Fantome bleu = new Fantome(this, "bleu");
+        Fantome rose = new Fantome(this, "rose");
+        Fantome rouge = new Fantome(this, "rouge");
+        Fantome orange = new Fantome(this, "orange");
+        grilleEntites[0][0] = bleu;
+        grilleEntites[0][1] = rose;
+        grilleEntites[0][2] = rouge;
+        grilleEntites[0][3] = orange;
+        map.put(bleu, new Point(0, 0));
+        map.put(rose, new Point(0, 1));
+        map.put(rouge, new Point(0, 2));
+        map.put(orange, new Point(0, 3));
     }
     
     
