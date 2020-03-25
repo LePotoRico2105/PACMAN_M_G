@@ -1,5 +1,6 @@
 package VueControleur;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
@@ -37,8 +38,28 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private int sizeX; // taille de la grille affichée
     private int sizeY;
 
-    private ImageIcon icoPacMan; // icones affichées dans la grille
-    private ImageIcon icoFantome;
+    private ImageIcon icone; // icones affichées dans la grille
+    private ImageIcon icoPacman;
+    private ImageIcon icoBleuH;
+    private ImageIcon icoBleuD;
+    private ImageIcon icoBleuB;
+    private ImageIcon icoBleuG;
+    private ImageIcon icoRoseH;
+    private ImageIcon icoRoseD;
+    private ImageIcon icoRoseB;
+    private ImageIcon icoRoseG;
+    private ImageIcon icoRougeH;
+    private ImageIcon icoRougeD;
+    private ImageIcon icoRougeB;
+    private ImageIcon icoRougeG;
+    private ImageIcon icoOrangeH;
+    private ImageIcon icoOrangeD;
+    private ImageIcon icoOrangeB;
+    private ImageIcon icoOrangeG;
+    private ImageIcon icoPastilleS;
+    private ImageIcon icoPastilleL;
+    private ImageIcon icoLogoTransparent;
+    private ImageIcon icoLogoCouleur;
     private ImageIcon icoCouloir;
 
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associé à une icône, suivant ce qui est présent dans la partie modèle)
@@ -48,12 +69,12 @@ public class VueControleurPacMan extends JFrame implements Observer {
 
         sizeX = _sizeX;
         sizeY = _sizeY;
+        
 
         chargerLesIcones();
         placerLesComposantsGraphiques();
 
         ajouterEcouteurClavier();
-
     }
 
     private void ajouterEcouteurClavier() {
@@ -80,9 +101,30 @@ public class VueControleurPacMan extends JFrame implements Observer {
     }
 
     private void chargerLesIcones() {
-        icoPacMan = chargerIcone("Images/Pacman.png");
-        icoCouloir = chargerIcone("Images/Couloir.png");
-        icoFantome = chargerIcone("Images/Fantome.png");
+        // icones affichées dans la grille
+        icone = chargerIcone("Images/icone.png");
+        icoPacman = chargerIcone("Images/pacman.png");
+        icoBleuH = chargerIcone("Images/bleuB.png");
+        icoBleuD = chargerIcone("Images/bleuD.png");
+        icoBleuB = chargerIcone("Images/bleuB.png");
+        icoBleuG = chargerIcone("Images/bleuG.png");
+        icoRoseH = chargerIcone("Images/roseH.png");
+        icoRoseD = chargerIcone("Images/roseD.png");
+        icoRoseB = chargerIcone("Images/roseB.png");
+        icoRoseG = chargerIcone("Images/roseG.png");
+        icoRougeH = chargerIcone("Images/rougeH.png");
+        icoRougeD = chargerIcone("Images/rougeD.png");
+        icoRougeB = chargerIcone("Images/rougeB.png");
+        icoRougeG = chargerIcone("Images/rougeG.png");
+        icoOrangeH = chargerIcone("Images/orangeH.png");
+        icoOrangeD = chargerIcone("Images/orangeD.png");
+        icoOrangeB = chargerIcone("Images/orangeB.png");
+        icoOrangeG = chargerIcone("Images/orangeG.png");
+        icoPastilleS = chargerIcone("Images/pastilleS.png");
+        icoPastilleL = chargerIcone("Images/pastilleL.png");
+        icoLogoTransparent = chargerIcone("Images/logoTransparent.png");
+        icoLogoCouleur = chargerIcone("Images/logoCouleur.png");
+        icoCouloir = chargerIcone("Images/couloir.png");
     }
 
     private ImageIcon chargerIcone(String urlIcone) {
@@ -98,13 +140,13 @@ public class VueControleurPacMan extends JFrame implements Observer {
     }
 
     private void placerLesComposantsGraphiques() {
-
+        Color color = new Color(255,255,255,255);
         setTitle("PacMan");
-        setSize(200, 250);
+        setSize(650, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
 
-        JComponent grilleJLabels = new JPanel(new GridLayout(10, 10)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
-
+        JComponent grilleJLabels = new JPanel(new GridLayout(sizeX, sizeY)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
+        grilleJLabels.setBackground(color);
         tabJLabel = new JLabel[sizeX][sizeY];
         
 
@@ -131,21 +173,28 @@ public class VueControleurPacMan extends JFrame implements Observer {
 
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
-                if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue
-                    
-                    tabJLabel[x][y].setIcon(icoPacMan);
-                    
-                    
-                    
+                if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue     
+                    tabJLabel[x][y].setIcon(icoPacman);   
                 } else if (jeu.getGrille()[x][y] instanceof Fantome) {
-                    
-                    tabJLabel[x][y].setIcon(icoFantome);
+                    Fantome f = (Fantome) jeu.getGrille()[x][y];
+                    if (null != f.getColor()) switch (f.getColor()) {
+                        case "bleu":
+                            tabJLabel[x][y].setIcon(icoBleuB);
+                            break;
+                        case "rose":
+                            tabJLabel[x][y].setIcon(icoRoseB);
+                            break;
+                        case "rouge":
+                            tabJLabel[x][y].setIcon(icoRougeB);
+                            break;
+                        case "orange":
+                            tabJLabel[x][y].setIcon(icoOrangeB);
+                            break;
+                        default:
+                            break;
+                    }
                 } else {
-                    
                         tabJLabel[x][y].setIcon(icoCouloir);
-                        
-                        
-                    
                 }
                 
                 
