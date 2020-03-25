@@ -45,11 +45,12 @@ public class Jeu extends Observable implements Runnable {
     }
     
     private void initialisationDesEntites() {
-        
-        pm = new Pacman(this);
+        //  Initialisation du pacman
+        pm = new Pacman(this, 3, false);
         grilleEntites[2][0] = pm;
         map.put(pm, new Point(2, 0));
         
+        // Initialisation des fantomes
         Fantome bleu = new Fantome(this, "bleu");
         Fantome rose = new Fantome(this, "rose");
         Fantome rouge = new Fantome(this, "rouge");
@@ -64,7 +65,6 @@ public class Jeu extends Observable implements Runnable {
         map.put(orange, new Point(0, 3));
     }
     
-    
     /** Permet a une entité  de percevoir sont environnement proche et de définir sa strétégie de déplacement 
      * (fonctionalité utilisée dans choixDirection() de Fantôme)
      */
@@ -78,11 +78,8 @@ public class Jeu extends Observable implements Runnable {
     public boolean deplacerEntite(Entite e, Direction d) {
         
         boolean retour;
-        
         Point pCourant = map.get(e);
-        
         Point pCible = calculerPointCible(pCourant, d);
-        
         if (contenuDansGrille(pCible) && objetALaPosition(pCible) == null) { // a adapter (collisions murs, etc.)
             deplacerEntite(pCourant, pCible, e);
             retour = true;
@@ -92,18 +89,14 @@ public class Jeu extends Observable implements Runnable {
         return retour;
     }
     
-    
     private Point calculerPointCible(Point pCourant, Direction d) {
-        Point pCible = null;
-        
+        Point pCible = null;   
         switch(d) {
             case haut: pCible = new Point(pCourant.x, pCourant.y - 1); break;
             case bas : pCible = new Point(pCourant.x, pCourant.y + 1); break;
             case gauche : pCible = new Point(pCourant.x - 1, pCourant.y); break;
             case droite : pCible = new Point(pCourant.x + 1, pCourant.y); break;     
-            
         }
-        
         return pCible;
     }
     
@@ -121,11 +114,9 @@ public class Jeu extends Observable implements Runnable {
     
     private Object objetALaPosition(Point p) {
         Object retour = null;
-        
         if (contenuDansGrille(p)) {
             retour = grilleEntites[p.x][p.y];
         }
-        
         return retour;
     }
     
@@ -133,31 +124,22 @@ public class Jeu extends Observable implements Runnable {
      * Un processus est créé et lancé, celui-ci execute la fonction run()
      */
     public void start() {
-
         new Thread(this).start();
-
     }
 
     @Override
     public void run() {
-
         while (true) {
-
             for (Entite e : map.keySet()) { // déclenchement de l'activité des entités, map.keySet() correspond à la liste des entités
                 e.run(); 
             }
-
             setChanged();
             notifyObservers(); // notification de l'observer pour le raffraichisssement graphique
-
             try {
                 Thread.sleep(500); // pause de 0.5s
             } catch (InterruptedException ex) {
                 Logger.getLogger(Pacman.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         }
-
     }
-
 }

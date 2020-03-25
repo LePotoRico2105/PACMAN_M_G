@@ -26,8 +26,7 @@ public class Fantome extends Entite {
     }
     
     @Override
-    public void choixDirection() {
-        
+    public void choixDirection() {  
         // développer une stratégie plus détaillée (utiliser regarderDansLaDirection(Entité, Direction) , ajouter murs, etc.)
         switch (r.nextInt(2)) {
             case 0:
