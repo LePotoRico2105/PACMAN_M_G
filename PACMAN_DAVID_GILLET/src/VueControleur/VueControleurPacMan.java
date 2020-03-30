@@ -1,11 +1,13 @@
 package VueControleur;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import modele.Direction;
 import modele.Fantome;
+import modele.Mur;
 import modele.Jeu;
 import modele.Pacman;
 
@@ -61,13 +64,50 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private ImageIcon icoPastilleL;
     private ImageIcon icoLogoTransparent;
     private ImageIcon icoLogoCouleur;
-    private ImageIcon icoMurDroit;
+    private ImageIcon icoMur;
+    private ImageIcon icoMurDroit1;
+    private ImageIcon icoMurDroit2;
     private ImageIcon icoMurFin;
-    private ImageIcon icoMurAngle;
+    private ImageIcon icoMurFin1;
+    private ImageIcon icoMurFin2;
+    private ImageIcon icoMurFin3;
+    private ImageIcon icoMurFin4;
+    private ImageIcon icoMurCote1;
+    private ImageIcon icoMurCote2;
+    private ImageIcon icoMurCote3;
+    private ImageIcon icoMurCote4;
+    private ImageIcon icoMurAngle1;
+    private ImageIcon icoMurAngle2;
+    private ImageIcon icoMurAngle3;
+    private ImageIcon icoMurAngle4;
     private ImageIcon icoCouloir;
 
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associé à une icône, suivant ce qui est présent dans la partie modèle)
+    
+    public BufferedImage rotate(BufferedImage image, Double degrees) {
+        // Calculate the new size of the image based on the angle of rotaion
+        double radians = Math.toRadians(degrees);
+        double sin = Math.abs(Math.sin(radians));
+        double cos = Math.abs(Math.cos(radians));
+        int newWidth = (int) Math.round(image.getWidth() * cos + image.getHeight() * sin);
+        int newHeight = (int) Math.round(image.getWidth() * sin + image.getHeight() * cos);
 
+        // Create a new image
+        BufferedImage rotate = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = rotate.createGraphics();
+        // Calculate the "anchor" point around which the image will be rotated
+        int x = (newWidth - image.getWidth()) / 2;
+        int y = (newHeight - image.getHeight()) / 2;
+        // Transform the origin point around the anchor point
+        AffineTransform at = new AffineTransform();
+        at.setToRotation(radians, x + (image.getWidth() / 2), y + (image.getHeight() / 2));
+        at.translate(x, y);
+        g2d.setTransform(at);
+        // Paint the originl image
+        g2d.drawImage(image, 0, 0, null);
+        g2d.dispose();
+        return rotate;
+    }
 
     public VueControleurPacMan(int _sizeX, int _sizeY) {
 
@@ -106,35 +146,47 @@ public class VueControleurPacMan extends JFrame implements Observer {
 
     private void chargerLesIcones() {
         // icones affichées dans la grille
-        icone = chargerIcone("Images/icone.png");
-        icoPacman = chargerIcone("Images/pacman.png");
-        icoBleuH = chargerIcone("Images/bleuB.png");
-        icoBleuD = chargerIcone("Images/bleuD.png");
-        icoBleuB = chargerIcone("Images/bleuB.png");
-        icoBleuG = chargerIcone("Images/bleuG.png");
-        icoRoseH = chargerIcone("Images/roseH.png");
-        icoRoseD = chargerIcone("Images/roseD.png");
-        icoRoseB = chargerIcone("Images/roseB.png");
-        icoRoseG = chargerIcone("Images/roseG.png");
-        icoRougeH = chargerIcone("Images/rougeH.png");
-        icoRougeD = chargerIcone("Images/rougeD.png");
-        icoRougeB = chargerIcone("Images/rougeB.png");
-        icoRougeG = chargerIcone("Images/rougeG.png");
-        icoOrangeH = chargerIcone("Images/orangeH.png");
-        icoOrangeD = chargerIcone("Images/orangeD.png");
-        icoOrangeB = chargerIcone("Images/orangeB.png");
-        icoOrangeG = chargerIcone("Images/orangeG.png");
-        icoPastilleS = chargerIcone("Images/pastilleS.png");
-        icoPastilleL = chargerIcone("Images/pastilleL.png");
-        icoLogoTransparent = chargerIcone("Images/logoTransparent.png");
-        icoLogoCouleur = chargerIcone("Images/logoCouleur.png");
-        icoCouloir = chargerIcone("Images/couloir.png");
-        icoMurDroit = chargerIcone("Images/murDroit.png");
-        icoMurFin = chargerIcone("Images/murFin.png");
-        icoMurAngle = chargerIcone("Images/murAngle.png");
+        icone = chargerIcone("Images/icone.png", 0.0);
+        icoPacman = chargerIcone("Images/pacman.png", 0.0);
+        icoBleuH = chargerIcone("Images/bleuB.png", 0.0);
+        icoBleuD = chargerIcone("Images/bleuD.png", 0.0);
+        icoBleuB = chargerIcone("Images/bleuB.png", 0.0);
+        icoBleuG = chargerIcone("Images/bleuG.png", 0.0);
+        icoRoseH = chargerIcone("Images/roseH.png", 0.0);
+        icoRoseD = chargerIcone("Images/roseD.png", 0.0);
+        icoRoseB = chargerIcone("Images/roseB.png", 0.0);
+        icoRoseG = chargerIcone("Images/roseG.png", 0.0);
+        icoRougeH = chargerIcone("Images/rougeH.png", 0.0);
+        icoRougeD = chargerIcone("Images/rougeD.png", 0.0);
+        icoRougeB = chargerIcone("Images/rougeB.png", 0.0);
+        icoRougeG = chargerIcone("Images/rougeG.png", 0.0);
+        icoOrangeH = chargerIcone("Images/orangeH.png", 0.0);
+        icoOrangeD = chargerIcone("Images/orangeD.png", 0.0);
+        icoOrangeB = chargerIcone("Images/orangeB.png", 0.0);
+        icoOrangeG = chargerIcone("Images/orangeG.png", 0.0);
+        icoPastilleS = chargerIcone("Images/pastilleS.png", 0.0);
+        icoPastilleL = chargerIcone("Images/pastilleL.png", 0.0);
+        icoLogoTransparent = chargerIcone("Images/logoTransparent.png", 0.0);
+        icoLogoCouleur = chargerIcone("Images/logoCouleur.png", 0.0);
+        icoCouloir = chargerIcone("Images/couloir.png", 0.0);
+        icoMur = chargerIcone("Images/mur.png", 0.0);
+        icoMurDroit1 = chargerIcone("Images/murDroit.png", 0.0);
+        icoMurDroit2 = chargerIcone("Images/murDroit.png", 90.0);
+        icoMurFin1 = chargerIcone("Images/murFin.png", 0.0);
+        icoMurFin2 = chargerIcone("Images/murFin.png", 90.0);
+        icoMurFin3 = chargerIcone("Images/murFin.png", 180.0);
+        icoMurFin4 = chargerIcone("Images/murFin.png", 270.0);
+        icoMurCote1 = chargerIcone("Images/murCote.png", 0.0);
+        icoMurCote2 = chargerIcone("Images/murCote.png", 90.0);
+        icoMurCote3 = chargerIcone("Images/murCote.png", 180.0);
+        icoMurCote4 = chargerIcone("Images/murCote.png", 270.0);
+        icoMurAngle1 = chargerIcone("Images/murAngle.png", 0.0);
+        icoMurAngle2 = chargerIcone("Images/murAngle.png", 90.0);
+        icoMurAngle3 = chargerIcone("Images/murAngle.png", 180.0);
+        icoMurAngle4 = chargerIcone("Images/murAngle.png", 270.0);
     }
 
-    private ImageIcon chargerIcone(String urlIcone) {
+    private ImageIcon chargerIcone(String urlIcone, Double rotation) {
 
         BufferedImage image = null;
         try {
@@ -143,7 +195,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             Logger.getLogger(VueControleurPacMan.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-        return new ImageIcon(image);
+        return new ImageIcon(rotate(image,rotation));
     }
 
     private void placerLesComposantsGraphiques() {
@@ -169,9 +221,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             }
 
         }
-
         add(grilleJLabels);
-
     }
 
     
@@ -182,7 +232,32 @@ public class VueControleurPacMan extends JFrame implements Observer {
 
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
-                if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue     
+                if(jeu.getGrilleMurs()[x][y] != null){
+                    if (jeu.getGrilleMurs()[x][y].getType() == "droit"){
+                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurDroit1); 
+                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurDroit2); 
+                    }
+                    else if (jeu.getGrilleMurs()[x][y].getType() == "angle"){
+                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurAngle1); 
+                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurAngle2); 
+                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 3) tabJLabel[x][y].setIcon(icoMurAngle3);
+                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 4) tabJLabel[x][y].setIcon(icoMurAngle4);
+                    }
+                    else if (jeu.getGrilleMurs()[x][y].getType() == "fin"){
+                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurFin1); 
+                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurFin2); 
+                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 3) tabJLabel[x][y].setIcon(icoMurFin3);
+                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 4) tabJLabel[x][y].setIcon(icoMurFin4);
+                    }
+                    else if (jeu.getGrilleMurs()[x][y].getType() == "cote"){
+                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurCote1); 
+                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurCote2); 
+                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 3) tabJLabel[x][y].setIcon(icoMurCote3);
+                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 4) tabJLabel[x][y].setIcon(icoMurCote4);
+                    }
+                    
+                }
+                else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue     
                     tabJLabel[x][y].setIcon(icoPacman);   
                 } else if (jeu.getGrille()[x][y] instanceof Fantome) {
                     Fantome f = (Fantome) jeu.getGrille()[x][y];
@@ -202,12 +277,10 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         default:
                             break;
                     }
-                } else {
+                }else {
                         tabJLabel[x][y].setIcon(icoCouloir);
                 }
-                
-                
-
+  
             }
         }
 
@@ -215,11 +288,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        
-        
         mettreAJourAffichage();
-        
-        
         /*
         SwingUtilities.invokeLater(new Runnable() {
                     @Override
