@@ -1,6 +1,8 @@
 package VueControleur;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -22,6 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingConstants;
 import modele.Direction;
 import modele.Fantome;
 import modele.Mur;
@@ -133,7 +136,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 
                 switch(e.getKeyCode()) {  // on écoute les flèches de direction du clavier
                     case KeyEvent.VK_LEFT : 
-                        jeu.getPacman().setDirection(Direction.gauche); 
+                        jeu.getPacman().setDirection(Direction.gauche);
                         break;
                     case KeyEvent.VK_RIGHT : 
                         jeu.getPacman().setDirection(Direction.droite); 
@@ -300,7 +303,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         else if (jeu.getGrilleMurs()[x][y].getRotationType() == 4) tabJLabel[x][y].setIcon(icoMurCote4);
                     }
                     else if (jeu.getGrilleMurs()[x][y].getType() == "mur"){
-                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMur); 
+                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMur);                        
                     }
                     
                 }
