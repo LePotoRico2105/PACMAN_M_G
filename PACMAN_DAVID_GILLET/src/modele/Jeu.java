@@ -28,11 +28,14 @@ public class Jeu extends Observable implements Runnable {
     private Entite[][] grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
     private HashMap<Mur, Point> mapMurs = new  HashMap<Mur, Point>(); // permet de récupérer la position d'une entité à partir de sa référence
     private Mur[][] grilleMurs = new Mur[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
+    private HashMap<Pastille, Point> mapPastilles = new  HashMap<Pastille, Point>(); // permet de récupérer la position d'une entité à partir de sa référence
+    private Pastille[][] grillePastilles = new Pastille[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
     
     // TODO : ajouter les murs, couloir, PacGums, et adapter l'ensemble des fonctions (prévoir le raffraichissement également du côté de la vue)
     
     
     public Jeu() {
+        initialisationDesPastilles();
         initialisationDesEntites();
         initialisationDesMurs();
     }
@@ -45,6 +48,10 @@ public class Jeu extends Observable implements Runnable {
         return grilleMurs;
     }
     
+    public Pastille[][] getGrillePastilles() {
+        return grillePastilles;
+    }
+    
     public Pacman getPacman() {
         return pm;
     }
@@ -53,7 +60,7 @@ public class Jeu extends Observable implements Runnable {
         //  Initialisation du pacman
         pm = new Pacman(this, 3, false);
         grilleEntites[2][2] = pm;
-        map.put(pm, new Point(2, 2));
+        map.put(pm, new Point(8, 15));
         
         // Initialisation des fantomes
         Fantome bleu = new Fantome(this, "bleu");
@@ -70,6 +77,7 @@ public class Jeu extends Observable implements Runnable {
         map.put(orange, new Point(9, 9));
         
     }
+    
     public void initialisationDesMurs(){
         Mur mur;
         // A1
@@ -391,7 +399,19 @@ public class Jeu extends Observable implements Runnable {
         mur = new Mur(this, "fin", 2);
         grilleMurs[17][4] = mur;
         mapMurs.put(mur, new Point(17,4));
+    }
+    
+    public void initialisationDesPastilles(){
+        Pastille pastille;
         
+        pastille = new Pastille(this, "pastilleS", false);
+        for(int x = 0; x < SIZE_X; x++){
+            for(int y = 0; y < SIZE_Y; y++){
+                if(grilleMurs[x][y] == null)
+                    grillePastilles[x][y] = pastille;
+                    mapPastilles.put(pastille, new Point(x,y));
+            }
+        }
     }
     
     /** Permet a une entité  de percevoir sont environnement proche et de définir sa strétégie de déplacement 
