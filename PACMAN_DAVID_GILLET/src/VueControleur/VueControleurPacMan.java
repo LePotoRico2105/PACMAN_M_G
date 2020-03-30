@@ -255,6 +255,9 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         else if (jeu.getGrilleMurs()[x][y].getRotationType() == 3) tabJLabel[x][y].setIcon(icoMurCote3);
                         else if (jeu.getGrilleMurs()[x][y].getRotationType() == 4) tabJLabel[x][y].setIcon(icoMurCote4);
                     }
+                    else if (jeu.getGrilleMurs()[x][y].getType() == "mur"){
+                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMur); 
+                    }
                     
                 }
                 else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue     
