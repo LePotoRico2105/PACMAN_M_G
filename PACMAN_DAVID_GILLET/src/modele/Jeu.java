@@ -822,13 +822,13 @@ public class Jeu extends Observable implements Runnable {
     
     public void initialisationDesPastilles(){
         Pastille pastille;
-        pastille = new Pastille(this, "petite", false);
+        pastille = new Pastille(this, "petite");
         
         for(int x = 0; x < SIZE_X; x++){
             for(int y = 0; y < SIZE_Y; y++)
             {
-                grillePastilles[x][y] = pastille;
-        mapPastilles.put(pastille, new Point(x,y));
+                if (grilleMurs[x][y] == null) grillePastilles[x][y] = pastille;
+                mapPastilles.put(pastille, new Point(x,y));
             }
         }
     }
