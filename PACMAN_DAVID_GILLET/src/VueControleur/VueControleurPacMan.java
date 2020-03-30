@@ -128,10 +128,18 @@ public class VueControleurPacMan extends JFrame implements Observer {
             public void keyPressed(KeyEvent e) {
                 
                 switch(e.getKeyCode()) {  // on écoute les flèches de direction du clavier
-                    case KeyEvent.VK_LEFT : jeu.getPacman().setDirection(Direction.gauche); break;
-                    case KeyEvent.VK_RIGHT : jeu.getPacman().setDirection(Direction.droite); break;
-                    case KeyEvent.VK_DOWN : jeu.getPacman().setDirection(Direction.bas); break;
-                    case KeyEvent.VK_UP : jeu.getPacman().setDirection(Direction.haut); break;
+                    case KeyEvent.VK_LEFT : 
+                        jeu.getPacman().setDirection(Direction.gauche); 
+                        break;
+                    case KeyEvent.VK_RIGHT : 
+                        jeu.getPacman().setDirection(Direction.droite); 
+                        break;
+                    case KeyEvent.VK_DOWN : 
+                        jeu.getPacman().setDirection(Direction.bas);
+                        break;
+                    case KeyEvent.VK_UP : 
+                        jeu.getPacman().setDirection(Direction.haut);
+                        break;
                 }
                 
             }
@@ -199,13 +207,43 @@ public class VueControleurPacMan extends JFrame implements Observer {
     }
 
     private void placerLesComposantsGraphiques() {
+        
         ImageIcon icon = new ImageIcon("Images/icone.png");
         setIconImage(icon.getImage());
         Color color = new Color(255,255,255,255);
         setTitle("PacMan");
         setSize(sizeX*40, sizeY*40);
+        setLocationRelativeTo(null);
+        setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
-
+        
+        /*
+        // Fenêtre de la page d'accueil
+        JFrame fenetreTitre = new JFrame();
+        fenetreTitre.setTitle("PacMan");
+        fenetreTitre.setSize(sizeX*40, sizeY*40);
+        fenetreTitre.setLocationRelativeTo(null);
+        fenetreTitre.setResizable(false);
+        fenetreTitre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
+        fenetreTitre.setBackground(color);
+        
+        // Fenêtre des règles du jeu
+        JFrame fenetreRegle = new JFrame();
+        fenetreRegle.setTitle("PacMan");
+        fenetreRegle.setSize(sizeX*40, sizeY*40);
+        fenetreRegle.setLocationRelativeTo(null);
+        fenetreRegle.setResizable(false);
+        fenetreRegle.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
+        
+        // Fenêtre du jeu
+        JFrame fenetreJeu = new JFrame();
+        fenetreJeu.setTitle("PacMan");
+        fenetreJeu.setSize(sizeX*40, sizeY*40);
+        fenetreJeu.setLocationRelativeTo(null);
+        fenetreJeu.setResizable(false);
+        fenetreJeu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
+        */
+        
         JComponent grilleJLabels = new JPanel(new GridLayout(sizeX, sizeY)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
         grilleJLabels.setBackground(color);
         tabJLabel = new JLabel[sizeX][sizeY];
@@ -223,7 +261,6 @@ public class VueControleurPacMan extends JFrame implements Observer {
         }
         add(grilleJLabels);
     }
-
     
     /**
      * Il y a une grille du côté du modèle ( jeu.getGrille() ) et une grille du côté de la vue (tabJLabel)
@@ -233,57 +270,105 @@ public class VueControleurPacMan extends JFrame implements Observer {
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
                 if(jeu.getGrilleMurs()[x][y] != null){
-                    if (jeu.getGrilleMurs()[x][y].getType() == "droit"){
-                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurDroit1); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurDroit2); 
-                    }
-                    else if (jeu.getGrilleMurs()[x][y].getType() == "angle"){
-                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurAngle1); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurAngle2); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 3) tabJLabel[x][y].setIcon(icoMurAngle3);
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 4) tabJLabel[x][y].setIcon(icoMurAngle4);
-                    }
-                    else if (jeu.getGrilleMurs()[x][y].getType() == "fin"){
-                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurFin1); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurFin2); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 3) tabJLabel[x][y].setIcon(icoMurFin3);
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 4) tabJLabel[x][y].setIcon(icoMurFin4);
-                    }
-                    else if (jeu.getGrilleMurs()[x][y].getType() == "cote"){
-                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurCote1); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurCote2); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 3) tabJLabel[x][y].setIcon(icoMurCote3);
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 4) tabJLabel[x][y].setIcon(icoMurCote4);
-                    }
-                    
+                    if (null != jeu.getGrilleMurs()[x][y].getType())
+                        switch (jeu.getGrilleMurs()[x][y].getType()) {
+                            case "droit":
+                                if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurDroit1);
+                                else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurDroit2);
+                            break;
+                            
+                            case "angle":
+                                switch (jeu.getGrilleMurs()[x][y].getRotationType()) {
+                                    case 1:
+                                        tabJLabel[x][y].setIcon(icoMurAngle1);
+                                        break;
+                                    case 2:
+                                        tabJLabel[x][y].setIcon(icoMurAngle2);
+                                        break;
+                                    case 3:
+                                        tabJLabel[x][y].setIcon(icoMurAngle3);
+                                        break;
+                                    case 4:
+                                        tabJLabel[x][y].setIcon(icoMurAngle4);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            break;
+                            
+                            case "fin":
+                                switch (jeu.getGrilleMurs()[x][y].getRotationType()) {
+                                    case 1:
+                                        tabJLabel[x][y].setIcon(icoMurFin1);
+                                        break;
+                                    case 2:
+                                        tabJLabel[x][y].setIcon(icoMurFin2);
+                                        break;
+                                    case 3:
+                                        tabJLabel[x][y].setIcon(icoMurFin3);
+                                        break;
+                                    case 4:
+                                        tabJLabel[x][y].setIcon(icoMurFin4);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            break;
+
+                            case "cote":
+                                switch (jeu.getGrilleMurs()[x][y].getRotationType()) {
+                                    case 1:
+                                        tabJLabel[x][y].setIcon(icoMurCote1);
+                                        break;
+                                    case 2:
+                                        tabJLabel[x][y].setIcon(icoMurCote2);
+                                        break;
+                                    case 3:
+                                        tabJLabel[x][y].setIcon(icoMurCote3);
+                                        break;
+                                    case 4:
+                                        tabJLabel[x][y].setIcon(icoMurCote4);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            break;
+                            
+                            default:
+                                break;
+                        }  
                 }
                 else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue     
                     tabJLabel[x][y].setIcon(icoPacman);   
-                } else if (jeu.getGrille()[x][y] instanceof Fantome) {
+                }
+                else if (jeu.getGrille()[x][y] == null) { // si la grille du modèle contient ni Pacman, ni murs, on associe l'icône Pastille du côté de la vue     
+                    tabJLabel[x][y].setIcon(icoPastilleS);  
+                } 
+                else if (jeu.getGrille()[x][y] instanceof Fantome) {
                     Fantome f = (Fantome) jeu.getGrille()[x][y];
-                    if (null != f.getColor()) switch (f.getColor()) {
-                        case "bleu":
-                            tabJLabel[x][y].setIcon(icoBleuB);
-                            break;
-                        case "rose":
-                            tabJLabel[x][y].setIcon(icoRoseB);
-                            break;
-                        case "rouge":
-                            tabJLabel[x][y].setIcon(icoRougeB);
-                            break;
-                        case "orange":
-                            tabJLabel[x][y].setIcon(icoOrangeB);
-                            break;
-                        default:
-                            break;
+                    if (null != f.getColor()) 
+                        switch (f.getColor()) {
+                            case "bleu":
+                                tabJLabel[x][y].setIcon(icoBleuB);
+                                break;
+                            case "rose":
+                                tabJLabel[x][y].setIcon(icoRoseB);
+                                break;
+                            case "rouge":
+                                tabJLabel[x][y].setIcon(icoRougeB);
+                                break;
+                            case "orange":
+                                tabJLabel[x][y].setIcon(icoOrangeB);
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                }else {
+                    else {
                         tabJLabel[x][y].setIcon(icoCouloir);
                 }
-  
             }
         }
-
     }
 
     @Override
@@ -296,8 +381,6 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         mettreAJourAffichage();
                     }
                 }); 
-       */
-        
+       */   
     }
-
 }
