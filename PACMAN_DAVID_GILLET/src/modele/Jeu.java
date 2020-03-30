@@ -839,7 +839,7 @@ public class Jeu extends Observable implements Runnable {
             }
         }
     }
-
+    
     @Override
     public void run() {
         while (true) {
