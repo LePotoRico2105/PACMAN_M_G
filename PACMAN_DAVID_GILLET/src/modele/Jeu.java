@@ -398,12 +398,13 @@ public class Jeu extends Observable implements Runnable {
         // R5
         mur = new Mur(this, "fin", 2);
         grilleMurs[17][4] = mur;
-        mapMurs.put(mur, new Point(17,4));
+        mapMurs.put(mur, new Point(17,4)); 
     }
+    
     
     public void initialisationDesPastilles(){
         Pastille pastille;
-        
+    
         pastille = new Pastille(this, "pastilleS", false);
         for(int x = 0; x < SIZE_X; x++){
             for(int y = 0; y < SIZE_Y; y++){

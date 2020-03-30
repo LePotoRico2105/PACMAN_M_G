@@ -30,6 +30,10 @@ public class Pacman extends Entite {
         this.mort = mort;
     }
     
+    public Direction getDirection() {
+        return d;
+    }
+    
     public void setDirection(Direction _d) {
         d = _d;
     }
