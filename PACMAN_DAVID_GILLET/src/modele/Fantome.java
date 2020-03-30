@@ -5,6 +5,7 @@
  */
 package modele;
 
+import java.awt.Point;
 import java.util.Random;
 
 /**
@@ -28,13 +29,39 @@ public class Fantome extends Entite {
     @Override
     public void choixDirection() {  
         // développer une stratégie plus détaillée (utiliser regarderDansLaDirection(Entité, Direction) , ajouter murs, etc.)
-        switch (r.nextInt(2)) {
-            case 0:
-                d = Direction.droite;
-                break;
-            case 1:
-                d = Direction.bas;
-                break;
+        if (d == null){
+          switch (r.nextInt(4)) {
+                case 0:
+                    d = Direction.droite;
+                    break;
+                case 1:
+                    d = Direction.bas;
+                    break;
+                case 2:
+                    d = Direction.gauche;
+                    break;
+                case 3:
+                    d = Direction.haut;
+                    break;
+            }  
+        }
+        else{
+            while (jeu.regarderDansLaDirection(this, d) instanceof Mur || jeu.regarderDansLaDirection(this, d) instanceof Fantome){
+                switch (r.nextInt(4)) {
+                    case 0:
+                        d = Direction.droite;
+                        break;
+                    case 1:
+                        d = Direction.bas;
+                        break;
+                    case 2:
+                        d = Direction.gauche;
+                        break;
+                    case 3:
+                        d = Direction.haut;
+                        break;
+                }
+            }
         }
     }
 }
