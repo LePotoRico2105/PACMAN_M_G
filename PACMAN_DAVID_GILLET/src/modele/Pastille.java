@@ -17,10 +17,10 @@ public class Pastille {
     private Jeu jeu;
     
     
-    public Pastille(Jeu _jeu, String p_type, boolean p_estMange) {
+    public Pastille(Jeu _jeu, String p_type) {
         jeu = _jeu;
         type = p_type;
-        estMange = p_estMange;
+        estMange = false;
     }
     
     public String getType(){
@@ -29,5 +29,9 @@ public class Pastille {
     
     public boolean getEstMange(){
         return estMange;
+    }
+    
+    public void mangerPastille(){
+        estMange = true;
     }
 }
