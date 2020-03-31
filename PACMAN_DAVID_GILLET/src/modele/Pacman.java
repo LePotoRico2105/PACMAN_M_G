@@ -38,16 +38,18 @@ public class Pacman extends Entite {
         d = _d;
     }
 
-    public Pacman(Jeu jeu, int nbVies, boolean mort) {
-        super(jeu);
+    public Pacman(Jeu _jeu, int nbVies) {
+        super(_jeu);
         this.nbVies = nbVies;
-        this.mort = mort;
-        d = Direction.droite;
+        this.mort = false;
+        this.d = Direction.droite;
     }
     
     public Pacman(Jeu _jeu) {
         super(_jeu);
-        d = Direction.droite;
+        this.nbVies = 3;
+        this.mort = false;
+        this.d = Direction.droite;
     }
     
     @Override
