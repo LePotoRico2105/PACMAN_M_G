@@ -44,7 +44,10 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private int sizeY;
 
     private ImageIcon icone; // icones affichées dans la grille
-    private ImageIcon icoPacman;
+    private ImageIcon icoPacman1;
+    private ImageIcon icoPacman2;
+    private ImageIcon icoPacman3;
+    private ImageIcon icoPacman4;
     private ImageIcon icoBleuH;
     private ImageIcon icoBleuD;
     private ImageIcon icoBleuB;
@@ -156,7 +159,10 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private void chargerLesIcones() {
         // icones affichées dans la grille
         icone = chargerIcone("Images/icone.png", 0.0);
-        icoPacman = chargerIcone("Images/pacman.png", 0.0);
+        icoPacman1 = chargerIcone("Images/pacman.png", 0.0);
+        icoPacman2 = chargerIcone("Images/pacman.png", 90.0);
+        icoPacman3 = chargerIcone("Images/pacman.png", 180.0);
+        icoPacman4 = chargerIcone("Images/pacman.png", 270.0);
         icoBleuH = chargerIcone("Images/bleuB.png", 0.0);
         icoBleuD = chargerIcone("Images/bleuD.png", 0.0);
         icoBleuB = chargerIcone("Images/bleuB.png", 0.0);
@@ -298,8 +304,12 @@ public class VueControleurPacMan extends JFrame implements Observer {
                     }
                     
                 }
-                else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue     
-                    tabJLabel[x][y].setIcon(icoPacman);
+                else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue 
+                    Pacman p = (Pacman)jeu.getGrille()[x][y];
+                    if(p.getDirection() == Direction.droite)tabJLabel[x][y].setIcon(icoPacman1);
+                    else if(p.getDirection() == Direction.bas)tabJLabel[x][y].setIcon(icoPacman2);
+                    else if(p.getDirection() == Direction.gauche)tabJLabel[x][y].setIcon(icoPacman3);
+                    else if(p.getDirection() == Direction.haut)tabJLabel[x][y].setIcon(icoPacman4);
                     jeu.getGrillePastilles()[x][y].mangerPastille();
                 }
                 else if (jeu.getGrille()[x][y] instanceof Fantome) {
@@ -323,7 +333,8 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         }
                 }
                 else if (jeu.getGrillePastilles()[x][y] instanceof Pastille && !jeu.getGrillePastilles()[x][y].getEstMange()) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue     
-                    tabJLabel[x][y].setIcon(icoPastilleS);
+                    if(jeu.getGrillePastilles()[x][y].getType() == "petite")tabJLabel[x][y].setIcon(icoPastilleS);
+                    if(jeu.getGrillePastilles()[x][y].getType() == "grande")tabJLabel[x][y].setIcon(icoPastilleL);
                 }
                 else{ // si la grille du modèle contient ni Pacman, ni murs, on associe l'icône Pastille du côté de la vue     
                 tabJLabel[x][y].setIcon(icoCouloir); 
