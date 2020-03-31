@@ -58,9 +58,9 @@ public class Jeu extends Observable implements Runnable {
     
     private void initialisationDesEntites() {
         //  Initialisation du pacman
-        pm = new Pacman(this, 3, false);
-        grilleEntites[2][2] = pm;
-        map.put(pm, new Point(1, 1));
+        pm = new Pacman(this);
+        grilleEntites[6][10] = pm;
+        map.put(pm, new Point(6, 10));
         
         // Initialisation des fantomes
         Fantome bleu = new Fantome(this, "bleu");
@@ -822,14 +822,20 @@ public class Jeu extends Observable implements Runnable {
     
     public void initialisationDesPastilles(){
         Pastille pastille;
-        pastille = new Pastille(this, "petite");
         
         for(int x = 0; x < SIZE_X; x++){
             for(int y = 0; y < SIZE_Y; y++)
             {
-                if (grilleMurs[x][y] == null) grillePastilles[x][y] = pastille;
-                mapPastilles.put(pastille, new Point(x,y));
-                pastille = new Pastille(this, "petite");
+                
+                if (grilleMurs[x][y] == null && ((x == 1 && y == 1)||(x == 1 && y == SIZE_Y-2)||(x == SIZE_X-2 && y == SIZE_Y-2)||(x == SIZE_X-2 && y == 1))){ 
+                    pastille = new Pastille(this, "grande");
+                    grillePastilles[x][y] = pastille;
+                    mapPastilles.put(pastille, new Point(x,y));
+                }else if(grilleMurs[x][y] == null){
+                    pastille = new Pastille(this, "petite");
+                    grillePastilles[x][y] = pastille;
+                    mapPastilles.put(pastille, new Point(x,y));
+                }
             }
         }
     }
