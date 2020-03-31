@@ -829,6 +829,7 @@ public class Jeu extends Observable implements Runnable {
             {
                 if (grilleMurs[x][y] == null) grillePastilles[x][y] = pastille;
                 mapPastilles.put(pastille, new Point(x,y));
+                pastille = new Pastille(this, "petite");
             }
         }
     }
