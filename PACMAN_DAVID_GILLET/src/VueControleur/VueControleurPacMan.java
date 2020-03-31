@@ -300,6 +300,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 }
                 else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue     
                     tabJLabel[x][y].setIcon(icoPacman);
+                    jeu.getGrillePastilles()[x][y].mangerPastille();
                 }
                 else if (jeu.getGrille()[x][y] instanceof Fantome) {
                     Fantome f = (Fantome) jeu.getGrille()[x][y];
@@ -321,10 +322,10 @@ public class VueControleurPacMan extends JFrame implements Observer {
                                 break;
                         }
                 }
-                else if (jeu.getGrillePastilles()[x][y] instanceof Pastille) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue     
+                else if (jeu.getGrillePastilles()[x][y] instanceof Pastille && !jeu.getGrillePastilles()[x][y].getEstMange()) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue     
                     tabJLabel[x][y].setIcon(icoPastilleS);
                 }
-                else if (jeu.getGrille()[x][y] == null) { // si la grille du modèle contient ni Pacman, ni murs, on associe l'icône Pastille du côté de la vue     
+                else{ // si la grille du modèle contient ni Pacman, ni murs, on associe l'icône Pastille du côté de la vue     
                 tabJLabel[x][y].setIcon(icoCouloir); 
                 }
             }
