@@ -280,32 +280,87 @@ public class VueControleurPacMan extends JFrame implements Observer {
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
                 if(jeu.getGrilleMurs()[x][y] != null){
-                    if (jeu.getGrilleMurs()[x][y].getType() == "droit"){
-                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurDroit1); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurDroit2); 
-                    }
-                    else if (jeu.getGrilleMurs()[x][y].getType() == "angle"){
-                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurAngle1); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurAngle2); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 3) tabJLabel[x][y].setIcon(icoMurAngle3);
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 4) tabJLabel[x][y].setIcon(icoMurAngle4);
-                    }
-                    else if (jeu.getGrilleMurs()[x][y].getType() == "fin"){
-                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurFin1); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurFin2); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 3) tabJLabel[x][y].setIcon(icoMurFin3);
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 4) tabJLabel[x][y].setIcon(icoMurFin4);
-                    }
-                    else if (jeu.getGrilleMurs()[x][y].getType() == "cote"){
-                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurCote1); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurCote2); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 3) tabJLabel[x][y].setIcon(icoMurCote3);
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 4) tabJLabel[x][y].setIcon(icoMurCote4);
-                    }
-                    else if (jeu.getGrilleMurs()[x][y].getType() == "mur"){
-                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMur);                        
-                    }
-                    
+                    if (null != jeu.getGrilleMurs()[x][y].getType())
+                        switch (jeu.getGrilleMurs()[x][y].getType()) {
+                            case "droit":
+                                switch (jeu.getGrilleMurs()[x][y].getRotationType()){
+                                    case 1:
+                                        tabJLabel[x][y].setIcon(icoMurDroit1);
+                                        break;
+                                    case 2:
+                                        tabJLabel[x][y].setIcon(icoMurDroit2);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            
+                            case "angle":
+                                switch (jeu.getGrilleMurs()[x][y].getRotationType()) {
+                                    case 1:
+                                        tabJLabel[x][y].setIcon(icoMurAngle1);
+                                        break;
+                                    case 2:
+                                        tabJLabel[x][y].setIcon(icoMurAngle2);
+                                        break;
+                                    case 3:
+                                        tabJLabel[x][y].setIcon(icoMurAngle3);
+                                        break;
+                                    case 4:
+                                        tabJLabel[x][y].setIcon(icoMurAngle4);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+
+                            case "fin":
+                                switch (jeu.getGrilleMurs()[x][y].getRotationType()) {
+                                    case 1:
+                                        tabJLabel[x][y].setIcon(icoMurFin1);
+                                        break;
+                                    case 2:
+                                        tabJLabel[x][y].setIcon(icoMurFin2);
+                                        break;
+                                    case 3:
+                                        tabJLabel[x][y].setIcon(icoMurFin3);
+                                        break;
+                                    case 4:
+                                        tabJLabel[x][y].setIcon(icoMurFin4);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+
+                            case "cote":
+                                switch (jeu.getGrilleMurs()[x][y].getRotationType()) {
+                                    case 1:
+                                        tabJLabel[x][y].setIcon(icoMurCote1);
+                                        break;
+                                    case 2:
+                                        tabJLabel[x][y].setIcon(icoMurCote2);
+                                        break;
+                                    case 3:
+                                        tabJLabel[x][y].setIcon(icoMurCote3);
+                                        break;
+                                    case 4:
+                                        tabJLabel[x][y].setIcon(icoMurCote4);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+
+                            case "mur":  
+                                switch (jeu.getGrilleMurs()[x][y].getRotationType()) {
+                                    case 1:
+                                        tabJLabel[x][y].setIcon(icoMur);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                        }
                 }
                 else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue 
                     Pacman p = (Pacman)jeu.getGrille()[x][y];
