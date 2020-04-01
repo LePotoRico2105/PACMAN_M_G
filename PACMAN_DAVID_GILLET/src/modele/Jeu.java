@@ -59,8 +59,8 @@ public class Jeu extends Observable implements Runnable {
     private void initialisationDesEntites() {
         //  Initialisation du pacman
         pm = new Pacman(this);
-        grilleEntites[6][10] = pm;
-        map.put(pm, new Point(6, 10));
+        grilleEntites[9][15] = pm;
+        map.put(pm, new Point(9, 15));
         
         // Initialisation des fantomes
         Fantome bleu = new Fantome(this, "bleu");

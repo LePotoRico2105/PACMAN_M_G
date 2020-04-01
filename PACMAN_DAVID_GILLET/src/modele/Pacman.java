@@ -49,7 +49,7 @@ public class Pacman extends Entite {
         super(_jeu);
         this.nbVies = 3;
         this.mort = false;
-        this.d = Direction.droite;
+        this.d = Direction.haut;
     }
     
     @Override
