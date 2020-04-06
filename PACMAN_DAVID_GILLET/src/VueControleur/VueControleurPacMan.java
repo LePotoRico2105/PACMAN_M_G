@@ -1,6 +1,11 @@
 package VueControleur;
 
+
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -11,17 +16,24 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingConstants;
 import modele.Direction;
 import modele.Fantome;
 import modele.Mur;
@@ -220,11 +232,23 @@ public class VueControleurPacMan extends JFrame implements Observer {
         return new ImageIcon(rotate(image,rotation));
     }
 
-    private void placerLesComposantsGraphiques() {
-        
+    private void placerLesComposantsGraphiques(){
+        // Mise en place d'une icône
         ImageIcon icon = new ImageIcon("Images/icone.png");
         setIconImage(icon.getImage());
-        Color color = new Color(255,255,255,255);
+        Color color = new Color(255,255,255,255);   
+        // Mise en place de la bande son
+        try {
+            String soundName = "Sounds/musiqueFond.wav";    
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch(IOException | LineUnavailableException |UnsupportedAudioFileException ex) {
+            ex.printStackTrace();
+        }    
+        // Paramètre de la fenêtre de jeu
         setTitle("PacMan");
         setSize(sizeX*40, sizeY*40);
         setLocationRelativeTo(null);
@@ -249,12 +273,12 @@ public class VueControleurPacMan extends JFrame implements Observer {
         fenetreRegle.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
         
         // Fenêtre du jeu
-        JFrame fenetreJeu = new JFrame();
-        fenetreJeu.setTitle("PacMan");
-        fenetreJeu.setSize(sizeX*40, sizeY*40);
-        fenetreJeu.setLocationRelativeTo(null);
-        fenetreJeu.setResizable(false);
-        fenetreJeu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
+        JFrame Fjeu = new JFrame();
+        Fjeu.setTitle("PacMan");
+        Fjeu.setSize(sizeX*40, sizeY*40);
+        Fjeu.setLocationRelativeTo(null);
+        Fjeu.setResizable(false);
+        Fjeu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
         */
         
         JComponent grilleJLabels = new JPanel(new GridLayout(sizeX, sizeY)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
@@ -350,53 +374,55 @@ public class VueControleurPacMan extends JFrame implements Observer {
                             break;
                         default:
                             break;
-                    }
+
                     
+                     }
                 }
-                else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue 
-                    pacmanPresent = true;
-                    if ("grande".equals(jeu.getGrillePastilles()[x][y].getType()) && !jeu.getGrillePastilles()[x][y].getEstMange())jeu.getPacman().setBooste(true);
-                    jeu.getGrillePastilles()[x][y].mangerPastille();
-                    if(null != jeu.getPacman().getDirection())switch (jeu.getPacman().getDirection()) {
-                        case droite:
-                            tabJLabel[x][y].setIcon(icoPacman1);
-                            break;
-                        case bas:
-                            tabJLabel[x][y].setIcon(icoPacman2);
-                            break;
-                        case gauche:
-                            tabJLabel[x][y].setIcon(icoPacman3);
-                            break;
-                        case haut:
-                            tabJLabel[x][y].setIcon(icoPacman4);
-                            break;
-                        default:
-                            break;
-                    } 
-                }
-                else if (jeu.getGrille()[x][y] instanceof Fantome) {
-                    Fantome f = (Fantome) jeu.getGrille()[x][y];
-                    Pacman p = (Pacman)jeu.getPacman();
-                    if (null != f.getColor()) 
-                        if (f.getMort())tabJLabel[x][y].setIcon(icoDead);
-                        else if (p.getBoostee())tabJLabel[x][y].setIcon(icoEatable);
-                        else switch (f.getColor()) {
-                            case "bleu":
-                                tabJLabel[x][y].setIcon(icoBleuB);
+                    else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue 
+                        pacmanPresent = true;
+                        if ("grande".equals(jeu.getGrillePastilles()[x][y].getType()) && !jeu.getGrillePastilles()[x][y].getEstMange())jeu.getPacman().setBooste(true);
+                        jeu.getGrillePastilles()[x][y].mangerPastille();
+                        if(null != jeu.getPacman().getDirection())switch (jeu.getPacman().getDirection()) {
+                            case droite:
+                                tabJLabel[x][y].setIcon(icoPacman1);
                                 break;
-                            case "rose":
-                                tabJLabel[x][y].setIcon(icoRoseB);
+                            case bas:
+                                tabJLabel[x][y].setIcon(icoPacman2);
                                 break;
-                            case "rouge":
-                                tabJLabel[x][y].setIcon(icoRougeB);
+                            case gauche:
+                                tabJLabel[x][y].setIcon(icoPacman3);
                                 break;
-                            case "orange":
-                                tabJLabel[x][y].setIcon(icoOrangeB);
+                            case haut:
+                                tabJLabel[x][y].setIcon(icoPacman4);
                                 break;
                             default:
                                 break;
+                        } 
+                    }
+                    else if (jeu.getGrille()[x][y] instanceof Fantome) {
+                        Fantome f = (Fantome) jeu.getGrille()[x][y];
+                        Pacman p = (Pacman)jeu.getPacman();
+                        if (null != f.getColor()){ 
+                            if (f.getMort())tabJLabel[x][y].setIcon(icoDead);
+                            else if (p.getBoostee())tabJLabel[x][y].setIcon(icoEatable);
+                            else switch (f.getColor()) {
+                                case "bleu":
+                                    tabJLabel[x][y].setIcon(icoBleuB);
+                                    break;
+                                case "rose":
+                                    tabJLabel[x][y].setIcon(icoRoseB);
+                                    break;
+                                case "rouge":
+                                    tabJLabel[x][y].setIcon(icoRougeB);
+                                    break;
+                                case "orange":
+                                    tabJLabel[x][y].setIcon(icoOrangeB);
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
-                }
+                    }
                 else if (jeu.getGrillePastilles()[x][y] instanceof Pastille && !jeu.getGrillePastilles()[x][y].getEstMange()) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue     
                     if("petite".equals(jeu.getGrillePastilles()[x][y].getType()))tabJLabel[x][y].setIcon(icoPastilleS);
                     else if("grande".equals(jeu.getGrillePastilles()[x][y].getType()))tabJLabel[x][y].setIcon(icoPastilleL);
@@ -410,19 +436,19 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 }
             }
         }
-        if (!pacmanPresent) jeu.getPacman().setMort(true);
+        if (!pacmanPresent) jeu.getPacman().setMort(true);   
     }
 
     @Override
     public void update(Observable o, Object arg) {
         mettreAJourAffichage();
-  
+/*
         SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         mettreAJourAffichage();
                     }
-                }); 
+                });*/ 
+        }
 
-    }
 }
