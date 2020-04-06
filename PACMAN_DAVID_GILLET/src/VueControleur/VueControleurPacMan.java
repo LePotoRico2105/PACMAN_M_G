@@ -64,6 +64,8 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private ImageIcon icoOrangeD;
     private ImageIcon icoOrangeB;
     private ImageIcon icoOrangeG;
+    private ImageIcon icoEatable;
+    private ImageIcon icoDead;
     private ImageIcon icoPastilleS;
     private ImageIcon icoPastilleL;
     private ImageIcon icoLogoTransparent;
@@ -71,7 +73,6 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private ImageIcon icoMur;
     private ImageIcon icoMurDroit1;
     private ImageIcon icoMurDroit2;
-    private ImageIcon icoMurFin;
     private ImageIcon icoMurFin1;
     private ImageIcon icoMurFin2;
     private ImageIcon icoMurFin3;
@@ -133,17 +134,21 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 
                 switch(e.getKeyCode()) {  // on écoute les flèches de direction du clavier
                     case KeyEvent.VK_LEFT : 
+                        if (!(jeu.regarderDansLaDirection(jeu.getPacman(), Direction.gauche) instanceof Mur))
                         jeu.getPacman().setDirection(Direction.gauche); 
-                        break;
+                    break;
                     case KeyEvent.VK_RIGHT : 
+                        if (!(jeu.regarderDansLaDirection(jeu.getPacman(), Direction.droite) instanceof Mur))
                         jeu.getPacman().setDirection(Direction.droite); 
-                        break;
+                    break;
                     case KeyEvent.VK_DOWN : 
+                        if (!(jeu.regarderDansLaDirection(jeu.getPacman(), Direction.bas) instanceof Mur))
                         jeu.getPacman().setDirection(Direction.bas);
-                        break;
+                    break;
                     case KeyEvent.VK_UP : 
+                        if (!(jeu.regarderDansLaDirection(jeu.getPacman(), Direction.haut) instanceof Mur))
                         jeu.getPacman().setDirection(Direction.haut);
-                        break;
+                    break;
                 }
                 
             }
@@ -162,7 +167,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         icoPacman1 = chargerIcone("Images/pacman.png", 0.0);
         icoPacman2 = chargerIcone("Images/pacman.png", 90.0);
         icoPacman3 = chargerIcone("Images/pacman.png", 180.0);
-        icoPacman4 = chargerIcone("Images/pacman.png", 270.0);
+        icoPacman4 = chargerIcone("Images/pacman.png", 270.0); 
         icoBleuH = chargerIcone("Images/bleuB.png", 0.0);
         icoBleuD = chargerIcone("Images/bleuD.png", 0.0);
         icoBleuB = chargerIcone("Images/bleuB.png", 0.0);
@@ -179,6 +184,8 @@ public class VueControleurPacMan extends JFrame implements Observer {
         icoOrangeD = chargerIcone("Images/orangeD.png", 0.0);
         icoOrangeB = chargerIcone("Images/orangeB.png", 0.0);
         icoOrangeG = chargerIcone("Images/orangeG.png", 0.0);
+        icoEatable = chargerIcone("Images/eatable.png", 0.0);
+        icoDead = chargerIcone("Images/dead.png", 0.0);
         icoPastilleS = chargerIcone("Images/pastilleS.png", 0.0);
         icoPastilleL = chargerIcone("Images/pastilleL.png", 0.0);
         icoLogoTransparent = chargerIcone("Images/logoTransparent.png", 0.0);
@@ -223,7 +230,6 @@ public class VueControleurPacMan extends JFrame implements Observer {
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
-        
         /*
         // Fenêtre de la page d'accueil
         JFrame fenetreTitre = new JFrame();
@@ -273,49 +279,108 @@ public class VueControleurPacMan extends JFrame implements Observer {
      * Il y a une grille du côté du modèle ( jeu.getGrille() ) et une grille du côté de la vue (tabJLabel)
      */
     private void mettreAJourAffichage() {
-
+        boolean pacmanPresent = false;
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
                 if(jeu.getGrilleMurs()[x][y] != null){
-                    if (jeu.getGrilleMurs()[x][y].getType() == "droit"){
-                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurDroit1); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurDroit2); 
-                    }
-                    else if (jeu.getGrilleMurs()[x][y].getType() == "angle"){
-                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurAngle1); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurAngle2); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 3) tabJLabel[x][y].setIcon(icoMurAngle3);
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 4) tabJLabel[x][y].setIcon(icoMurAngle4);
-                    }
-                    else if (jeu.getGrilleMurs()[x][y].getType() == "fin"){
-                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurFin1); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurFin2); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 3) tabJLabel[x][y].setIcon(icoMurFin3);
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 4) tabJLabel[x][y].setIcon(icoMurFin4);
-                    }
-                    else if (jeu.getGrilleMurs()[x][y].getType() == "cote"){
-                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurCote1); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurCote2); 
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 3) tabJLabel[x][y].setIcon(icoMurCote3);
-                        else if (jeu.getGrilleMurs()[x][y].getRotationType() == 4) tabJLabel[x][y].setIcon(icoMurCote4);
-                    }
-                    else if (jeu.getGrilleMurs()[x][y].getType() == "mur"){
-                        if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMur); 
+                    if (null != jeu.getGrilleMurs()[x][y].getType())switch (jeu.getGrilleMurs()[x][y].getType()) {
+                        case "droit":
+                            if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurDroit1);
+                            else if (jeu.getGrilleMurs()[x][y].getRotationType() == 2) tabJLabel[x][y].setIcon(icoMurDroit2);
+                            break;
+                        case "angle":
+                        switch (jeu.getGrilleMurs()[x][y].getRotationType()) {
+                            case 1:
+                                tabJLabel[x][y].setIcon(icoMurAngle1);
+                                break;
+                            case 2:
+                                tabJLabel[x][y].setIcon(icoMurAngle2);
+                                break;
+                            case 3:
+                                tabJLabel[x][y].setIcon(icoMurAngle3);
+                                break;
+                            case 4:
+                                tabJLabel[x][y].setIcon(icoMurAngle4);
+                                break;
+                            default:
+                                break;
+                        }
+                            break;
+
+                        case "fin":
+                        switch (jeu.getGrilleMurs()[x][y].getRotationType()) {
+                            case 1:
+                                tabJLabel[x][y].setIcon(icoMurFin1);
+                                break;
+                            case 2:
+                                tabJLabel[x][y].setIcon(icoMurFin2);
+                                break;
+                            case 3:
+                                tabJLabel[x][y].setIcon(icoMurFin3);
+                                break;
+                            case 4:
+                                tabJLabel[x][y].setIcon(icoMurFin4);
+                                break;
+                            default:
+                                break;
+                        }
+                            break;
+
+                        case "cote":
+                        switch (jeu.getGrilleMurs()[x][y].getRotationType()) {
+                            case 1:
+                                tabJLabel[x][y].setIcon(icoMurCote1);
+                                break;
+                            case 2:
+                                tabJLabel[x][y].setIcon(icoMurCote2);
+                                break;
+                            case 3:
+                                tabJLabel[x][y].setIcon(icoMurCote3);
+                                break;
+                            case 4:
+                                tabJLabel[x][y].setIcon(icoMurCote4);
+                                break;
+                            default:
+                                break;
+                        }
+                            break;
+
+                        case "mur": 
+                            if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMur);
+                            break;
+                        default:
+                            break;
                     }
                     
                 }
                 else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue 
-                    Pacman p = (Pacman)jeu.getGrille()[x][y];
-                    if(p.getDirection() == Direction.droite)tabJLabel[x][y].setIcon(icoPacman1);
-                    else if(p.getDirection() == Direction.bas)tabJLabel[x][y].setIcon(icoPacman2);
-                    else if(p.getDirection() == Direction.gauche)tabJLabel[x][y].setIcon(icoPacman3);
-                    else if(p.getDirection() == Direction.haut)tabJLabel[x][y].setIcon(icoPacman4);
+                    pacmanPresent = true;
+                    if ("grande".equals(jeu.getGrillePastilles()[x][y].getType()) && !jeu.getGrillePastilles()[x][y].getEstMange())jeu.getPacman().setBooste(true);
                     jeu.getGrillePastilles()[x][y].mangerPastille();
+                    if(null != jeu.getPacman().getDirection())switch (jeu.getPacman().getDirection()) {
+                        case droite:
+                            tabJLabel[x][y].setIcon(icoPacman1);
+                            break;
+                        case bas:
+                            tabJLabel[x][y].setIcon(icoPacman2);
+                            break;
+                        case gauche:
+                            tabJLabel[x][y].setIcon(icoPacman3);
+                            break;
+                        case haut:
+                            tabJLabel[x][y].setIcon(icoPacman4);
+                            break;
+                        default:
+                            break;
+                    } 
                 }
                 else if (jeu.getGrille()[x][y] instanceof Fantome) {
                     Fantome f = (Fantome) jeu.getGrille()[x][y];
+                    Pacman p = (Pacman)jeu.getPacman();
                     if (null != f.getColor()) 
-                        switch (f.getColor()) {
+                        if (f.getMort())tabJLabel[x][y].setIcon(icoDead);
+                        else if (p.getBoostee())tabJLabel[x][y].setIcon(icoEatable);
+                        else switch (f.getColor()) {
                             case "bleu":
                                 tabJLabel[x][y].setIcon(icoBleuB);
                                 break;
@@ -333,26 +398,31 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         }
                 }
                 else if (jeu.getGrillePastilles()[x][y] instanceof Pastille && !jeu.getGrillePastilles()[x][y].getEstMange()) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue     
-                    if(jeu.getGrillePastilles()[x][y].getType() == "petite")tabJLabel[x][y].setIcon(icoPastilleS);
-                    if(jeu.getGrillePastilles()[x][y].getType() == "grande")tabJLabel[x][y].setIcon(icoPastilleL);
+                    if("petite".equals(jeu.getGrillePastilles()[x][y].getType()))tabJLabel[x][y].setIcon(icoPastilleS);
+                    else if("grande".equals(jeu.getGrillePastilles()[x][y].getType()))tabJLabel[x][y].setIcon(icoPastilleL);
                 }
                 else{ // si la grille du modèle contient ni Pacman, ni murs, on associe l'icône Pastille du côté de la vue     
                 tabJLabel[x][y].setIcon(icoCouloir); 
                 }
+                if(jeu.TIME >= 30) {
+                    jeu.getPacman().setBooste(false);
+                    jeu.TIME = 0;
+                }
             }
         }
+        if (!pacmanPresent) jeu.getPacman().setMort(true);
     }
 
     @Override
     public void update(Observable o, Object arg) {
         mettreAJourAffichage();
-        /*
+  
         SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         mettreAJourAffichage();
                     }
                 }); 
-       */   
+
     }
 }
