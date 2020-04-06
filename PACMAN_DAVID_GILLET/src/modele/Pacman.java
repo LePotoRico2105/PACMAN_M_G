@@ -9,15 +9,32 @@ public class Pacman extends Entite {
 
     private int nbVies;
     private boolean mort;
+    private boolean booste;
+    
+    public Pacman(Jeu _jeu, int _nbVies) {
+        super(_jeu);
+        this.nbVies = _nbVies;
+        this.mort = false;
+        this.booste = false;
+        this.d = Direction.droite;
+    }
+    
+    public Pacman(Jeu _jeu) {
+        super(_jeu);
+        this.nbVies = 3;
+        this.mort = false;
+        this.booste = false;
+        this.d = Direction.droite;
+    }
     
     public int getNbVies()
     {
         return nbVies;
     }
     
-    public void setNbVies(int nbVies)
+    public void setNbVies(int _nbVies)
     {
-        this.nbVies = nbVies;
+        this.nbVies = _nbVies;
     }
     
     public boolean getMort()
@@ -25,9 +42,19 @@ public class Pacman extends Entite {
         return mort;
     }
     
-    public void setMort(boolean mort)
+    public boolean getBoostee()
     {
-        this.mort = mort;
+        return booste;
+    }
+    
+    public void setMort(boolean _mort)
+    {
+        this.mort = _mort;
+    }
+    
+    public void setBooste(boolean _booste)
+    {
+        this.booste = _booste;
     }
     
     public Direction getDirection() {
@@ -38,19 +65,6 @@ public class Pacman extends Entite {
         d = _d;
     }
 
-    public Pacman(Jeu _jeu, int nbVies) {
-        super(_jeu);
-        this.nbVies = nbVies;
-        this.mort = false;
-        this.d = Direction.droite;
-    }
-    
-    public Pacman(Jeu _jeu) {
-        super(_jeu);
-        this.nbVies = 3;
-        this.mort = false;
-        this.d = Direction.droite;
-    }
     
     @Override
     public void choixDirection() {
