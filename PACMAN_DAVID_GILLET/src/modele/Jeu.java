@@ -19,6 +19,7 @@ import java.util.logging.Logger;
  */
 public class Jeu extends Observable implements Runnable {
 
+    public int TIME = 0;
     public static final int SIZE_X = 20;
     public static final int SIZE_Y = 20;
 
@@ -89,15 +90,37 @@ public class Jeu extends Observable implements Runnable {
     
     /** Si le déclacement de l'entité est autorisé (pas de mur ou autre entité), il est réalisé
      */
-    public boolean deplacerEntite(Entite e, Direction d) {
-        
+    public boolean deplacerEntite(Entite e, Direction d) {    
         boolean retour;
         Point pCourant = map.get(e);
         Point pCible = calculerPointCible(pCourant, d);
-        if (contenuDansGrille(pCible) && objetALaPosition(pCible) == null) { // a adapter (collisions murs, etc.)
-            deplacerEntite(pCourant, pCible, e);
+        if (contenuDansGrille(pCible)) { // a adapter (collisions murs, etc.)
+            if (pCible.x == -1 && pCible.y == 10) deplacerEntite(pCourant, new Point(19, 10), e);
+            else if (pCible.x == 20 && pCible.y == 10) deplacerEntite(pCourant, new Point(0, 10), e);
+            else if (objetALaPosition(pCible) == null)deplacerEntite(pCourant, pCible, e);
             retour = true;
-        } else {
+        }
+        else {
+            if (e instanceof Pacman && objetALaPosition(pCible) instanceof Fantome) {
+                Fantome f = (Fantome)getGrille()[pCible.x][pCible.y];
+                if(!getPacman().getBoostee()){
+                    if (!f.getMort())getPacman().setMort(true);
+                    deplacerEntite(pCourant, pCible, f);
+                }
+                else {
+                    f.setMort(true);
+                }
+            }
+            else if (e instanceof Fantome && objetALaPosition(pCible) instanceof Pacman){
+                Fantome f = (Fantome)e;
+                if(!getPacman().getBoostee()) {
+                    if (!f.getMort())getPacman().setMort(true);
+                    deplacerEntite(pCourant, pCible, f);
+                }
+                else {
+                    f.setMort(true);
+                }
+            }
             retour = false;
         }
         return retour;
@@ -123,7 +146,7 @@ public class Jeu extends Observable implements Runnable {
     /** Vérifie que p est contenu dans la grille
      */
     private boolean contenuDansGrille(Point p) {
-        return p.x >= 0 && p.x < SIZE_X && p.y >= 0 && p.y < SIZE_Y;
+        return ((p.x >= 0 && p.x < SIZE_X && p.y >= 0 && p.y < SIZE_Y) || (p.x == -1 && p.y == 10)|| (p.x == 20 && p.y == 10));
     }
     
     private Object objetALaPosition(Point p) {
@@ -140,6 +163,26 @@ public class Jeu extends Observable implements Runnable {
      */
     public void start() {
         new Thread(this).start();
+    }
+    
+    public void initialisationDesPastilles(){
+        Pastille pastille;
+        
+        for(int x = 0; x < SIZE_X; x++){
+            for(int y = 0; y < SIZE_Y; y++)
+            {
+                
+                if (grilleMurs[x][y] == null && ((x == 1 && y == 1)||(x == 1 && y == SIZE_Y-2)||(x == SIZE_X-2 && y == SIZE_Y-2)||(x == SIZE_X-2 && y == 1))){ 
+                    pastille = new Pastille(this, "grande");
+                    grillePastilles[x][y] = pastille;
+                    mapPastilles.put(pastille, new Point(x,y));
+                }else if(grilleMurs[x][y] == null){
+                    pastille = new Pastille(this, "petite");
+                    grillePastilles[x][y] = pastille;
+                    mapPastilles.put(pastille, new Point(x,y));
+                }
+            }
+        }
     }
     
     public void initialisationDesMurs(){
@@ -820,29 +863,11 @@ public class Jeu extends Observable implements Runnable {
         }
     }
     
-    public void initialisationDesPastilles(){
-        Pastille pastille;
-        
-        for(int x = 0; x < SIZE_X; x++){
-            for(int y = 0; y < SIZE_Y; y++)
-            {
-                
-                if (grilleMurs[x][y] == null && ((x == 1 && y == 1)||(x == 1 && y == SIZE_Y-2)||(x == SIZE_X-2 && y == SIZE_Y-2)||(x == SIZE_X-2 && y == 1))){ 
-                    pastille = new Pastille(this, "grande");
-                    grillePastilles[x][y] = pastille;
-                    mapPastilles.put(pastille, new Point(x,y));
-                }else if(grilleMurs[x][y] == null){
-                    pastille = new Pastille(this, "petite");
-                    grillePastilles[x][y] = pastille;
-                    mapPastilles.put(pastille, new Point(x,y));
-                }
-            }
-        }
-    }
+    
 
     @Override
     public void run() {
-        while (true) {
+        while (!getPacman().getMort()) {
             for (Entite e : map.keySet()) { // déclenchement de l'activité des entités, map.keySet() correspond à la liste des entités
                 e.run(); 
             }
@@ -850,9 +875,11 @@ public class Jeu extends Observable implements Runnable {
             notifyObservers(); // notification de l'observer pour le raffraichisssement graphique
             try {
                 Thread.sleep(500); // pause de 0.5s
+                if(getPacman().getBoostee())TIME++;
             } catch (InterruptedException ex) {
                 Logger.getLogger(Pacman.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
     }
 }
