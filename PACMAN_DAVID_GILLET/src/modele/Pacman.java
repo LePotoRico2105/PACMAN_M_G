@@ -64,20 +64,6 @@ public class Pacman extends Entite {
     public void setDirection(Direction _d) {
         d = _d;
     }
-
-    public Pacman(Jeu _jeu, int nbVies) {
-        super(_jeu);
-        this.nbVies = nbVies;
-        this.mort = false;
-        this.d = Direction.droite;
-    }
-    
-    public Pacman(Jeu _jeu) {
-        super(_jeu);
-        this.nbVies = 3;
-        this.mort = false;
-        this.d = Direction.haut;
-    }
     
     @Override
     public void choixDirection() {
