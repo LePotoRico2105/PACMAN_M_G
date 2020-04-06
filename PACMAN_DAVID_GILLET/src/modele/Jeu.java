@@ -861,8 +861,7 @@ public class Jeu extends Observable implements Runnable {
             grilleMurs[i][13] = mur;
             mapMurs.put(mur, new Point(i,13));
         }
-    }
-    
+}
     
 
     @Override
