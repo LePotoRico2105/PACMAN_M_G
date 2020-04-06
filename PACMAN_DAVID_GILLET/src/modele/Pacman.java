@@ -16,7 +16,7 @@ public class Pacman extends Entite {
         this.nbVies = _nbVies;
         this.mort = false;
         this.booste = false;
-        this.d = Direction.droite;
+        this.d = Direction.haut;
     }
     
     public Pacman(Jeu _jeu) {
@@ -24,7 +24,7 @@ public class Pacman extends Entite {
         this.nbVies = 3;
         this.mort = false;
         this.booste = false;
-        this.d = Direction.droite;
+        this.d = Direction.haut;
     }
     
     public int getNbVies()
@@ -64,7 +64,6 @@ public class Pacman extends Entite {
     public void setDirection(Direction _d) {
         d = _d;
     }
-
     
     @Override
     public void choixDirection() {
