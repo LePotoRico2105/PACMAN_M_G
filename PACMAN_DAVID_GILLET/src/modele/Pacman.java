@@ -1,6 +1,4 @@
 package modele;
-
-import java.util.Random;
 /**
  *
  * @author Matthieu David - Guillaume Gillet
@@ -42,7 +40,7 @@ public class Pacman extends Entite {
         return mort;
     }
     
-    public boolean getBoostee()
+    public boolean getBooste()
     {
         return booste;
     }

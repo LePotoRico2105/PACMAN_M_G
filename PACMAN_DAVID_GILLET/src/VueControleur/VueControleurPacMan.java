@@ -32,7 +32,6 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingConstants;
 import modele.Direction;
 import modele.Fantome;
@@ -52,8 +51,9 @@ public class VueControleurPacMan extends JFrame implements Observer {
 
     private Jeu jeu; // référence sur une classe de modèle : permet d'accéder aux données du modèle pour le rafraichissement, permet de communiquer les actions clavier (ou souris)
 
-    private int sizeX; // taille de la grille affichée
-    private int sizeY;
+    private final int sizeX; // taille de la grille affichée
+    private final int sizeY;
+    private int compteurMusiqueSuperPacman;
 
     private ImageIcon icone; // icones affichées dans la grille
     private ImageIcon icoPacman1;
@@ -98,7 +98,16 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private ImageIcon icoMurAngle3;
     private ImageIcon icoMurAngle4;
     private ImageIcon icoCouloir;
-
+    
+    private AudioInputStream audioMusiqueFond;
+    private AudioInputStream audioMangerPastille;
+    private AudioInputStream audioPacmanMort;
+    private AudioInputStream audioSuperPacman;
+    private Clip clipMusiqueFond;
+    private Clip clipSuperPacman;
+    private Clip clipPacmanMort;        
+    private Clip clipMangerPastille;
+    
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associé à une icône, suivant ce qui est présent dans la partie modèle)
     
     public BufferedImage rotate(BufferedImage image, Double degrees) {
@@ -134,7 +143,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
 
         chargerLesIcones();
         placerLesComposantsGraphiques();
-
+        initialisationMusique();
         ajouterEcouteurClavier();
     }
 
@@ -219,6 +228,27 @@ public class VueControleurPacMan extends JFrame implements Observer {
         icoMurAngle3 = chargerIcone("Images/murAngle.png", 180.0);
         icoMurAngle4 = chargerIcone("Images/murAngle.png", 270.0);
     }
+    
+    private void initialisationMusique(){
+        try {
+            audioMusiqueFond = AudioSystem.getAudioInputStream(new File("Sounds/musiqueFond.wav").getAbsoluteFile());
+            audioMangerPastille = AudioSystem.getAudioInputStream(new File("Sounds/mangerPastille.wav").getAbsoluteFile());
+            audioPacmanMort = AudioSystem.getAudioInputStream(new File("Sounds/pacmanMort.wav").getAbsoluteFile());
+            audioSuperPacman = AudioSystem.getAudioInputStream(new File("Sounds/superPacman.wav").getAbsoluteFile());
+            clipMusiqueFond = AudioSystem.getClip();
+            clipSuperPacman = AudioSystem.getClip();
+            clipPacmanMort = AudioSystem.getClip();
+            clipMangerPastille = AudioSystem.getClip();
+            clipMusiqueFond.open(audioMusiqueFond);
+            clipMusiqueFond.start();
+            clipSuperPacman.stop();
+            clipPacmanMort.stop();
+            clipMangerPastille.stop();
+            clipMusiqueFond.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch(IOException | LineUnavailableException | UnsupportedAudioFileException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     private ImageIcon chargerIcone(String urlIcone, Double rotation) {
 
@@ -237,23 +267,14 @@ public class VueControleurPacMan extends JFrame implements Observer {
         ImageIcon icon = new ImageIcon("Images/icone.png");
         setIconImage(icon.getImage());
         Color color = new Color(255,255,255,255);   
-        // Mise en place de la bande son
-        try {
-            String soundName = "Sounds/musiqueFond.wav";    
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-        } catch(IOException | LineUnavailableException |UnsupportedAudioFileException ex) {
-            ex.printStackTrace();
-        }    
+        
         // Paramètre de la fenêtre de jeu
         setTitle("PacMan");
         setSize(sizeX*40, sizeY*40);
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
+        
         /*
         // Fenêtre de la page d'accueil
         JFrame fenetreTitre = new JFrame();
@@ -374,13 +395,26 @@ public class VueControleurPacMan extends JFrame implements Observer {
                             break;
                         default:
                             break;
-
-                    
                      }
                 }
                     else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue 
                         pacmanPresent = true;
-                        if ("grande".equals(jeu.getGrillePastilles()[x][y].getType()) && !jeu.getGrillePastilles()[x][y].getEstMange())jeu.getPacman().setBooste(true);
+                        if ("grande".equals(jeu.getGrillePastilles()[x][y].getType()) && !jeu.getGrillePastilles()[x][y].getEstMange()){
+                            jeu.getPacman().setBooste(true);
+                            if(jeu.TIME == 0){
+                                try {
+                                    if(clipMusiqueFond.isActive()) clipMusiqueFond.stop();
+                                    if (compteurMusiqueSuperPacman == 0) clipSuperPacman.open(audioSuperPacman);
+                                    clipSuperPacman.setFramePosition(0);
+                                    clipSuperPacman.start();
+                                    clipSuperPacman.loop(Clip.LOOP_CONTINUOUSLY);
+                                    compteurMusiqueSuperPacman++;
+                                } catch(IOException | LineUnavailableException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                            jeu.TIME = 0;
+                        }
                         jeu.getGrillePastilles()[x][y].mangerPastille();
                         if(null != jeu.getPacman().getDirection())switch (jeu.getPacman().getDirection()) {
                             case droite:
@@ -404,7 +438,9 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         Pacman p = (Pacman)jeu.getPacman();
                         if (null != f.getColor()){ 
                             if (f.getMort())tabJLabel[x][y].setIcon(icoDead);
-                            else if (p.getBoostee())tabJLabel[x][y].setIcon(icoEatable);
+                            else if (p.getBooste()){
+                                tabJLabel[x][y].setIcon(icoEatable);
+                            }    
                             else switch (f.getColor()) {
                                 case "bleu":
                                     tabJLabel[x][y].setIcon(icoBleuB);
@@ -432,11 +468,24 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 }
                 if(jeu.TIME >= 30) {
                     jeu.getPacman().setBooste(false);
-                    jeu.TIME = 0;
+                    jeu.TIME = 0; 
+                        clipSuperPacman.stop();
+                        clipMusiqueFond.setFramePosition(0);
+                        clipMusiqueFond.start();
+                        clipMusiqueFond.loop(Clip.LOOP_CONTINUOUSLY);
                 }
             }
         }
-        if (!pacmanPresent) jeu.getPacman().setMort(true);   
+        if (!pacmanPresent){
+            jeu.getPacman().setMort(true);
+            try {
+                clipMusiqueFond.stop();
+                clipPacmanMort.open(audioPacmanMort);
+                clipPacmanMort.start();
+            } catch(IOException | LineUnavailableException ex) {
+                ex.printStackTrace();
+            }   
+        }
     }
 
     @Override
