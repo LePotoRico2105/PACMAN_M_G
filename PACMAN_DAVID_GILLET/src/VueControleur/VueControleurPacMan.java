@@ -54,7 +54,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
 
     private final int sizeX; // taille de la grille affichée
     private final int sizeY;
-    private int compteurMusiqueSuperPacman, compteurMusiqueMangerFantome;
+    private int compteurMusiqueSuperPacman, compteurMusiqueMangerFantome, compteurMusiqueMangerPastille;
 
     private ImageIcon icone; // icones affichées dans la grille
     private ImageIcon icoPacman1;
@@ -114,6 +114,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private FloatControl clipMusiqueFond_volume;
     private FloatControl clipPacmanMort_volume;
     private FloatControl clipMangerFantome_volume;
+    private FloatControl clipMangerPastille_volume;
     private FloatControl clipSuperPacman_volume;
     
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associé à une icône, suivant ce qui est présent dans la partie modèle)
@@ -419,6 +420,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                             if(jeu.TIME == 0){
                                 try {
                                     if(clipMusiqueFond.isActive()) clipMusiqueFond.stop();
+                                    if(clipMangerPastille.isActive()) clipMangerPastille.stop();
                                     if (compteurMusiqueSuperPacman == 0) clipSuperPacman.open(audioSuperPacman);
                                     clipSuperPacman.setFramePosition(0);
                                     clipSuperPacman.start();
@@ -458,7 +460,9 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         if (null != f.getColor()){ 
                             if (f.getMort()){
                                 tabJLabel[x][y].setIcon(icoDead);
+                                /*
                                 try {
+                                    clipMangerPastille.stop();
                                     if (compteurMusiqueMangerFantome == 0) clipMangerFantome.open(audioMangerFantome);
                                     clipMangerFantome.start();
                                     clipMangerFantome.setFramePosition(0);
@@ -470,6 +474,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                                 } catch(IOException | LineUnavailableException ex) {
                                     ex.printStackTrace();
                                 }
+                                */
                             }
                             else if (p.getBooste()){
                                 tabJLabel[x][y].setIcon(icoEatable);
@@ -495,7 +500,23 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 else if (jeu.getGrillePastilles()[x][y] instanceof Pastille && !jeu.getGrillePastilles()[x][y].getEstMange()) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue     
                     if("petite".equals(jeu.getGrillePastilles()[x][y].getType()))tabJLabel[x][y].setIcon(icoPastilleS);
                     else if("grande".equals(jeu.getGrillePastilles()[x][y].getType()))tabJLabel[x][y].setIcon(icoPastilleL);
-                }else tabJLabel[x][y].setIcon(icoCouloir); 
+                }else {
+                    tabJLabel[x][y].setIcon(icoCouloir);
+                    /*
+                    try {
+                        if (compteurMusiqueMangerPastille == 0) clipMangerPastille.open(audioMangerPastille);
+                        clipMangerPastille.start();
+                        clipMangerPastille.loop(Clip.LOOP_CONTINUOUSLY);
+                        compteurMusiqueMangerPastille++;
+                        clipMangerPastille_volume = (FloatControl) clipMangerPastille.getControl(FloatControl.Type.MASTER_GAIN);
+                        double gain = 0.03;
+                        float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+                        clipMangerPastille_volume.setValue(dB);
+                        } catch(IOException | LineUnavailableException ex) {
+                            ex.printStackTrace();
+                        }
+                    */
+                } 
                 if(jeu.TIME >= 30) {
                     jeu.getPacman().setBooste(false);
                     jeu.TIME = 0; 
@@ -507,7 +528,9 @@ public class VueControleurPacMan extends JFrame implements Observer {
             }
         }
         if (jeu.getPacman().getMort()){
+            jeu.getPacman().setNbVies(jeu.getPacman().getNbVies()-1);
             try {
+                clipMangerPastille.stop();
                 clipMusiqueFond.stop();
                 clipPacmanMort.open(audioPacmanMort);
                 clipPacmanMort.start();
