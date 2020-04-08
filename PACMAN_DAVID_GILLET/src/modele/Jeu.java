@@ -89,6 +89,7 @@ public class Jeu extends Observable implements Runnable {
         grilleEntites[9][15] = pm;
         map.put(pm, new Point(9, 15));
         
+        
         // Initialisation des fantomes
         bleu = new Fantome(this, "bleu");
         rose = new Fantome(this, "rose");
