@@ -331,7 +331,6 @@ public class VueControleurPacMan extends JFrame implements Observer {
      * Il y a une grille du côté du modèle ( jeu.getGrille() ) et une grille du côté de la vue (tabJLabel)
      */
     private void mettreAJourAffichage() {
-        boolean pacmanPresent = false;
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
                 if(jeu.getGrilleMurs()[x][y] != null){
@@ -405,7 +404,6 @@ public class VueControleurPacMan extends JFrame implements Observer {
                      }
                 }
                     else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue 
-                        pacmanPresent = true;
                         if ("grande".equals(jeu.getGrillePastilles()[x][y].getType()) && !jeu.getGrillePastilles()[x][y].getEstMange()){
                             jeu.getPacman().setBooste(true);
                             if(jeu.TIME == 0){
@@ -487,8 +485,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 }
             }
         }
-        if (!pacmanPresent){
-            jeu.getPacman().setMort(true);
+        if (jeu.getPacman().getMort()){
             try {
                 clipMusiqueFond.stop();
                 clipPacmanMort.open(audioPacmanMort);
