@@ -139,7 +139,7 @@ public class Jeu extends Observable implements Runnable {
 
             }
             if (e instanceof Pacman){
-                if (objetALaPosition(pCible) == null) deplacerEntite(pCourant, pCible, e);
+                if (!(pCourant.x == 8 && pCourant.y == 8 && e.d == Direction.bas) && !(pCourant.x == 11 && pCourant.y == 8 && e.d == Direction.bas) && objetALaPosition(pCible) == null) deplacerEntite(pCourant, pCible, e);
                 else return false;
             }
         }
