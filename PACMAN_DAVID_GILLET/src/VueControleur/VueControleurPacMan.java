@@ -25,6 +25,7 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
@@ -107,6 +108,8 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private Clip clipSuperPacman;
     private Clip clipPacmanMort;        
     private Clip clipMangerPastille;
+    private FloatControl clipMusiqueFond_volume;
+    private FloatControl clipSuperPacman_volume;
     
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associé à une icône, suivant ce qui est présent dans la partie modèle)
     
@@ -245,6 +248,10 @@ public class VueControleurPacMan extends JFrame implements Observer {
             clipPacmanMort.stop();
             clipMangerPastille.stop();
             clipMusiqueFond.loop(Clip.LOOP_CONTINUOUSLY);
+            clipMusiqueFond_volume = (FloatControl) clipMusiqueFond.getControl(FloatControl.Type.MASTER_GAIN);
+            double gain = 0.05;
+            float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+            clipMusiqueFond_volume.setValue(dB);           
         } catch(IOException | LineUnavailableException | UnsupportedAudioFileException ex) {
             ex.printStackTrace();
         }
@@ -409,6 +416,10 @@ public class VueControleurPacMan extends JFrame implements Observer {
                                     clipSuperPacman.start();
                                     clipSuperPacman.loop(Clip.LOOP_CONTINUOUSLY);
                                     compteurMusiqueSuperPacman++;
+                                    clipSuperPacman_volume = (FloatControl) clipSuperPacman.getControl(FloatControl.Type.MASTER_GAIN);
+                                    double gain = 0.1;
+                                    float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+                                    clipSuperPacman_volume.setValue(dB);
                                 } catch(IOException | LineUnavailableException ex) {
                                     ex.printStackTrace();
                                 }
