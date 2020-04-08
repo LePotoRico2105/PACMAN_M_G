@@ -22,7 +22,6 @@ public class Fantome extends Entite {
         super(_jeu);
         color = p_color;
         mort = false;
-        d = Direction.haut;
     }
     
     public String getColor(){
@@ -53,6 +52,18 @@ public class Fantome extends Entite {
                   break;
               case 3:
                   d = Direction.haut;
+                  break;
+        }  
+        else if (jeu.regarderDansLaDirectionPoint(this, d).x == 8 && jeu.regarderDansLaDirectionPoint(this, d).y == 9 || jeu.regarderDansLaDirectionPoint(this, d).x == 11 && jeu.regarderDansLaDirectionPoint(this, d).y == 9)
+        switch (r.nextInt(3)) {
+              case 0:
+                  d = Direction.droite;
+                  break;
+              case 1:
+                  d = Direction.haut;
+                  break;
+              case 2:
+                  d = Direction.gauche;
                   break;
         }  
     }
