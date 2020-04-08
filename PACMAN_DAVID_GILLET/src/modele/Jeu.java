@@ -26,6 +26,10 @@ public class Jeu extends Observable implements Runnable {
 
 
     private Pacman pm;
+    private Fantome bleu;
+    private Fantome rouge;
+    private Fantome rose;
+    private Fantome orange;
 
     private HashMap<Entite, Point> map = new  HashMap<Entite, Point>(); // permet de récupérer la position d'une entité à partir de sa référence
     private Entite[][] grilleEntites = new Entite[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
@@ -59,6 +63,26 @@ public class Jeu extends Observable implements Runnable {
         return pm;
     }
     
+    public void replacerEntites(){
+        grilleEntites = new Entite[SIZE_X][SIZE_Y];
+        map = new  HashMap<Entite, Point>();
+        pm.setMort(false);
+        bleu = new Fantome(this, "bleu");
+        rose = new Fantome(this, "rose");
+        rouge = new Fantome(this, "rouge");
+        orange = new Fantome(this, "orange");
+        grilleEntites[9][15] = pm;
+        map.put(pm, new Point(9, 15));
+        grilleEntites[8][10] = bleu;
+        grilleEntites[9][10] = rose;
+        grilleEntites[10][10] = rouge;
+        grilleEntites[11][10] = orange;
+        map.put(bleu, new Point(8,10));
+        map.put(rose, new Point(9,10));
+        map.put(rouge, new Point(10,10));
+        map.put(orange, new Point(11,10));
+    }
+    
     private void initialisationDesEntites() {
         //  Initialisation du pacman
         pm = new Pacman(this);
@@ -66,10 +90,10 @@ public class Jeu extends Observable implements Runnable {
         map.put(pm, new Point(9, 15));
         
         // Initialisation des fantomes
-        Fantome bleu = new Fantome(this, "bleu");
-        Fantome rose = new Fantome(this, "rose");
-        Fantome rouge = new Fantome(this, "rouge");
-        Fantome orange = new Fantome(this, "orange");
+        bleu = new Fantome(this, "bleu");
+        rose = new Fantome(this, "rose");
+        rouge = new Fantome(this, "rouge");
+        orange = new Fantome(this, "orange");
         grilleEntites[8][10] = bleu;
         grilleEntites[9][10] = rose;
         grilleEntites[10][10] = rouge;
@@ -890,7 +914,7 @@ public class Jeu extends Observable implements Runnable {
 
     @Override
     public void run() {
-        while (!getPacman().getMort()) {
+        while (true) {
             for (Entite e : map.keySet()) { // déclenchement de l'activité des entités, map.keySet() correspond à la liste des entités
                 e.run(); 
             }
@@ -899,14 +923,17 @@ public class Jeu extends Observable implements Runnable {
             try {
                 Thread.sleep(500); // pause de 0.5s
                 TIME++;
+                if(getPacman().getNbVies() == 0){
+                    JOptionPane.showMessageDialog(null, "Pacman est mort !", "GAME OVER", JOptionPane.WARNING_MESSAGE);
+                    System.exit(0);
+                } 
+                else if (getPacman().getMort()) {
+                    JOptionPane.showMessageDialog(null, "il vous reste : " + getPacman().getNbVies() + " vies", "VIE PERDUE", JOptionPane.INFORMATION_MESSAGE);
+                    replacerEntites();
+                }
             } catch (InterruptedException ex) {
                 Logger.getLogger(Pacman.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        if(getPacman().getNbVies() == 0){
-            JOptionPane.showMessageDialog(null, "Pacman est mort !", "GAME OVER", JOptionPane.WARNING_MESSAGE);
-            System.exit(0);
-        } 
-        else if (getPacman().getNbVies() < 3) JOptionPane.showMessageDialog(null, "il vous reste : " + getPacman().getNbVies() + " vies", "VIE PERDUE", JOptionPane.INFORMATION_MESSAGE);
     }
 }

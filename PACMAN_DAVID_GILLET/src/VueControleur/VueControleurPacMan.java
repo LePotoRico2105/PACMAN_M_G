@@ -533,7 +533,8 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 clipPacmanMort_volume.setValue(dB);
             } catch(IOException | LineUnavailableException ex) {
                 ex.printStackTrace();
-            }   
+            }
+            initialisationMusique();
         }
     }
 
