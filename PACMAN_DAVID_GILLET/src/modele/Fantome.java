@@ -22,6 +22,7 @@ public class Fantome extends Entite {
         super(_jeu);
         color = p_color;
         mort = false;
+        d = Direction.haut;
     }
     
     public String getColor(){
