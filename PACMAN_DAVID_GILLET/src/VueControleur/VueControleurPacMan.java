@@ -460,7 +460,6 @@ public class VueControleurPacMan extends JFrame implements Observer {
                                 tabJLabel[x][y].setIcon(icoDead);
                                 try {
                                     if (compteurMusiqueMangerFantome == 0) clipMangerFantome.open(audioMangerFantome);
-                                    // clipMangerFantome.setFramePosition(0);
                                     clipMangerFantome.start();
                                     clipMangerFantome.setFramePosition(0);
                                     compteurMusiqueMangerFantome++;
