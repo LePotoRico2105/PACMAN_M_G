@@ -61,6 +61,10 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private ImageIcon icoPacman2;
     private ImageIcon icoPacman3;
     private ImageIcon icoPacman4;
+    private ImageIcon icoPacman21;
+    private ImageIcon icoPacman22;
+    private ImageIcon icoPacman23;
+    private ImageIcon icoPacman24;
     private ImageIcon icoBleuH;
     private ImageIcon icoBleuD;
     private ImageIcon icoBleuB;
@@ -193,6 +197,10 @@ public class VueControleurPacMan extends JFrame implements Observer {
         icoPacman2 = chargerIcone("Images/pacman.png", 90.0);
         icoPacman3 = chargerIcone("Images/pacman.png", 180.0);
         icoPacman4 = chargerIcone("Images/pacman.png", 270.0); 
+        icoPacman21 = chargerIcone("Images/pacman2.png", 0.0);
+        icoPacman22 = chargerIcone("Images/pacman2.png", 90.0);
+        icoPacman23 = chargerIcone("Images/pacman2.png", 180.0);
+        icoPacman24 = chargerIcone("Images/pacman2.png", 270.0); 
         icoBleuH = chargerIcone("Images/bleuB.png", 0.0);
         icoBleuD = chargerIcone("Images/bleuD.png", 0.0);
         icoBleuB = chargerIcone("Images/bleuB.png", 0.0);
@@ -409,37 +417,39 @@ public class VueControleurPacMan extends JFrame implements Observer {
                     else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue 
                         if ("grande".equals(jeu.getGrillePastilles()[x][y].getType()) && !jeu.getGrillePastilles()[x][y].getEstMange()){
                             jeu.getPacman().setBooste(true);
-                            if(jeu.TIME == 0){
-                                try {
-                                    if(clipMusiqueFond.isActive()) clipMusiqueFond.stop();
-                                    if (compteurMusiqueSuperPacman == 0) clipSuperPacman.open(audioSuperPacman);
-                                    clipSuperPacman.setFramePosition(0);
-                                    clipSuperPacman.start();
-                                    clipSuperPacman.loop(Clip.LOOP_CONTINUOUSLY);
-                                    compteurMusiqueSuperPacman++;
-                                    clipSuperPacman_volume = (FloatControl) clipSuperPacman.getControl(FloatControl.Type.MASTER_GAIN);
-                                    double gain = 0.1;
-                                    float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
-                                    clipSuperPacman_volume.setValue(dB);
-                                } catch(IOException | LineUnavailableException ex) {
-                                    ex.printStackTrace();
-                                }
-                            }
                             jeu.TIME = 0;
+                            try {
+                                if(clipMusiqueFond.isActive()) clipMusiqueFond.stop();
+                                if (compteurMusiqueSuperPacman == 0) clipSuperPacman.open(audioSuperPacman);
+                                clipSuperPacman.setFramePosition(0);
+                                clipSuperPacman.start();
+                                clipSuperPacman.loop(Clip.LOOP_CONTINUOUSLY);
+                                compteurMusiqueSuperPacman++;
+                                clipSuperPacman_volume = (FloatControl) clipSuperPacman.getControl(FloatControl.Type.MASTER_GAIN);
+                                double gain = 0.1;
+                                float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+                                clipSuperPacman_volume.setValue(dB);
+                            } catch(IOException | LineUnavailableException ex) {
+                                ex.printStackTrace();
+                            }
                         }
                         jeu.getGrillePastilles()[x][y].mangerPastille();
                         if(null != jeu.getPacman().getDirection())switch (jeu.getPacman().getDirection()) {
                             case droite:
-                                tabJLabel[x][y].setIcon(icoPacman1);
+                                if(jeu.TIME%2 == 0)tabJLabel[x][y].setIcon(icoPacman1);
+                                else tabJLabel[x][y].setIcon(icoPacman21);
                                 break;
                             case bas:
-                                tabJLabel[x][y].setIcon(icoPacman2);
+                                if(jeu.TIME%2 == 0) tabJLabel[x][y].setIcon(icoPacman2);
+                                else tabJLabel[x][y].setIcon(icoPacman22);
                                 break;
                             case gauche:
-                                tabJLabel[x][y].setIcon(icoPacman3);
+                                if(jeu.TIME%2 == 0) tabJLabel[x][y].setIcon(icoPacman3);
+                                else tabJLabel[x][y].setIcon(icoPacman23);
                                 break;
                             case haut:
-                                tabJLabel[x][y].setIcon(icoPacman4);
+                                if(jeu.TIME%2 == 0) tabJLabel[x][y].setIcon(icoPacman4);
+                                else tabJLabel[x][y].setIcon(icoPacman24);
                                 break;
                             default:
                                 break;
@@ -475,7 +485,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                     if("petite".equals(jeu.getGrillePastilles()[x][y].getType()))tabJLabel[x][y].setIcon(icoPastilleS);
                     else if("grande".equals(jeu.getGrillePastilles()[x][y].getType()))tabJLabel[x][y].setIcon(icoPastilleL);
                 }else tabJLabel[x][y].setIcon(icoCouloir); 
-                if(jeu.TIME >= 30) {
+                if(jeu.TIME % 30 == 29) {
                     jeu.getPacman().setBooste(false);
                     jeu.TIME = 0; 
                         clipSuperPacman.stop();
