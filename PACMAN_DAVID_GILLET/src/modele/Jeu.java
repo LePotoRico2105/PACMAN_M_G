@@ -88,9 +88,14 @@ public class Jeu extends Observable implements Runnable {
         Point positionEntite = map.get(e);
         return objetALaPosition(calculerPointCible(positionEntite, d));
     }
+    
+    public Point regarderDansLaDirectionPoint(Entite e, Direction d) {
+        Point positionEntite = map.get(e);
+        return calculerPointCible(positionEntite, d);
+    }
 
     
-    /** Si le déplacement de l'entité est autorisé (pas de mur ou autre entité), il est réalisé
+    /** Si le délacement de l'entité est autorisé (pas de mur ou autre entité), il est réalisé
      */
     public boolean deplacerEntite(Entite e, Direction d) {    
         Point pCourant = map.get(e);
@@ -119,7 +124,26 @@ public class Jeu extends Observable implements Runnable {
                 deplacerEntite(pCourant, pCible, f);
             }
         }
-        else if (contenuDansGrille(pCible) && objetALaPosition(pCible) == null)deplacerEntite(pCourant, pCible, e);
+        else if (contenuDansGrille(pCible)){
+            if (e instanceof Fantome){
+                if (pCourant.x == 8 && pCourant.y == 10 && objetALaPosition(new Point(8,9)) == null) {
+                    deplacerEntite(pCourant, new Point(8, 9), e);
+                    grilleEntites[8][9].d = Direction.haut;
+                }
+                else if (pCourant.x == 11 && pCourant.y == 10 && objetALaPosition(new Point(11,9)) == null) {
+                    deplacerEntite(pCourant, new Point(11, 9), e);
+                    grilleEntites[11][9].d = Direction.haut;
+                }
+                else if ((pCourant.x == 8 && pCourant.y == 8 && e.d == Direction.bas) || (pCourant.x == 11 && pCourant.y == 8 && e.d == Direction.bas) || objetALaPosition(pCible) != null) grilleEntites[pCourant.x][pCourant.y].choixDirection();
+                else deplacerEntite(pCourant, pCible, e);
+
+            }
+            if (e instanceof Pacman){
+                if (!(pCourant.x == 8 && pCourant.y == 8 && e.d == Direction.bas) && !(pCourant.x == 11 && pCourant.y == 8 && e.d == Direction.bas) && objetALaPosition(pCible) == null) deplacerEntite(pCourant, pCible, e);
+                else return false;
+            }
+        }
+        else return false;
         return true;
     }
     
@@ -175,9 +199,11 @@ public class Jeu extends Observable implements Runnable {
                     grillePastilles[x][y] = pastille;
                     mapPastilles.put(pastille, new Point(x,y));
                 }else if(grilleMurs[x][y] == null){
-                    pastille = new Pastille(this, "petite");
-                    grillePastilles[x][y] = pastille;
-                    mapPastilles.put(pastille, new Point(x,y));
+                    if (!(x == 8 && y == 10) && !(x == 11 && y == 10) && !(x == 9 && y == 10) && !(x == 10 && y == 10)){
+                        pastille = new Pastille(this, "petite");
+                        grillePastilles[x][y] = pastille;
+                        mapPastilles.put(pastille, new Point(x,y));
+                    }
                 }
             }
         }
