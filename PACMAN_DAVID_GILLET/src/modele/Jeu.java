@@ -90,13 +90,14 @@ public class Jeu extends Observable implements Runnable {
     }
 
     
-    /** Si le déclacement de l'entité est autorisé (pas de mur ou autre entité), il est réalisé
+    /** Si le déplacement de l'entité est autorisé (pas de mur ou autre entité), il est réalisé
      */
     public boolean deplacerEntite(Entite e, Direction d) {    
-        boolean retour = false;
         Point pCourant = map.get(e);
         Point pCible = calculerPointCible(pCourant, d);
-        if (e instanceof Pacman && pCible != new Point(-1, 10) && pCible != new Point(20, 10) && objetALaPosition(pCible) instanceof Fantome) {
+        if (pCible.x == -1 && pCible.y == 10) deplacerEntite(pCourant, new Point(19, 10), e);
+        else if (pCible.x == 20 && pCible.y == 10) deplacerEntite(pCourant, new Point(0, 10), e);
+        else if (e instanceof Pacman && objetALaPosition(pCible) instanceof Fantome) {
             Fantome f = (Fantome)getGrille()[pCible.x][pCible.y];
             if(!getPacman().getBooste()){
                 if (!f.getMort())getPacman().setMort(true);
@@ -107,7 +108,7 @@ public class Jeu extends Observable implements Runnable {
                 deplacerEntite(pCourant, pCible, getPacman());
             }
         }
-        else if (e instanceof Fantome && pCible != new Point(-1, 10) && pCible != new Point(20, 10) && objetALaPosition(pCible) instanceof Pacman){
+        else if (e instanceof Fantome && objetALaPosition(pCible) instanceof Pacman){
             Fantome f = (Fantome)e;
             if(!getPacman().getBooste()) {
                 if (!f.getMort())getPacman().setMort(true);
@@ -118,37 +119,14 @@ public class Jeu extends Observable implements Runnable {
                 deplacerEntite(pCourant, pCible, f);
             }
         }
-        else if (contenuDansGrille(pCible)) { // a adapter (collisions murs, etc.)
-            if (pCible.x == -1 && pCible.y == 10) deplacerEntite(pCourant, new Point(19, 10), e);
-            else if (pCible.x == 20 && pCible.y == 10) deplacerEntite(pCourant, new Point(0, 10), e);
-            else if (objetALaPosition(pCible) == null)deplacerEntite(pCourant, pCible, e);
-
-            retour = true;
-        }
-        else {
-            if (e instanceof Pacman && objetALaPosition(pCible) instanceof Fantome) {
-                Fantome f = (Fantome)getGrille()[pCible.x][pCible.y];
-                if(!getPacman().getBooste()){
-                    if (!f.getMort())getPacman().setMort(true);
-                    deplacerEntite(pCourant, pCible, f);
-                }
-                else {
-                    f.setMort(true);
-                }
-            }
-            else if (e instanceof Fantome && objetALaPosition(pCible) instanceof Pacman){
-                Fantome f = (Fantome)e;
-                if(!getPacman().getBooste()) {
-                    if (!f.getMort())getPacman().setMort(true);
-                    deplacerEntite(pCourant, pCible, f);
-                }
-                else {
-                    f.setMort(true);
-                }
-            }
-            retour = false;
-        }
-        return retour;
+        else if (contenuDansGrille(pCible) && objetALaPosition(pCible) == null)deplacerEntite(pCourant, pCible, e);
+        return true;
+    }
+    
+    private void deplacerEntite(Point pCourant, Point pCible, Entite e) {
+        grilleEntites[pCourant.x][pCourant.y] = null;
+        grilleEntites[pCible.x][pCible.y] = e;
+        map.put(e, pCible);
     }
     
     private Point calculerPointCible(Point pCourant, Direction d) {
@@ -162,16 +140,11 @@ public class Jeu extends Observable implements Runnable {
         return pCible;
     }
     
-    private void deplacerEntite(Point pCourant, Point pCible, Entite e) {
-        grilleEntites[pCourant.x][pCourant.y] = null;
-        grilleEntites[pCible.x][pCible.y] = e;
-        map.put(e, pCible);
-    }
     
     /** Vérifie que p est contenu dans la grille
      */
     private boolean contenuDansGrille(Point p) {
-        return ((p.x >= 0 && p.x < SIZE_X && p.y >= 0 && p.y < SIZE_Y) || (p.x == -1 && p.y == 10)|| (p.x == 20 && p.y == 10));
+        return (p.x >= 0 && p.x < SIZE_X && p.y >= 0 && p.y < SIZE_Y);
     }
     
     private Object objetALaPosition(Point p) {
