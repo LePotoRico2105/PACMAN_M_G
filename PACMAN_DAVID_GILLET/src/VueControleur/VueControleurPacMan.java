@@ -167,7 +167,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         jeu.getPacman().setDirection(Direction.droite); 
                     break;
                     case KeyEvent.VK_DOWN : 
-                        if (!(jeu.regarderDansLaDirection(jeu.getPacman(), Direction.bas) instanceof Mur))
+                        if (!(jeu.regarderDansLaDirection(jeu.getPacman(), Direction.bas) instanceof Mur) && !(jeu.regarderDansLaDirectionPoint(jeu.getPacman(), Direction.bas).x == 8 && jeu.regarderDansLaDirectionPoint(jeu.getPacman(), Direction.bas).y == 9) && !(jeu.regarderDansLaDirectionPoint(jeu.getPacman(), Direction.bas).x == 11 && jeu.regarderDansLaDirectionPoint(jeu.getPacman(), Direction.bas).y == 9))
                         jeu.getPacman().setDirection(Direction.bas);
                     break;
                     case KeyEvent.VK_UP : 
