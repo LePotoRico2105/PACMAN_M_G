@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /** La classe Jeu a deux fonctions 
  *  (1) Gérer les aspects du jeu : condition de défaite, victoire, nombre de vies
@@ -22,6 +23,7 @@ public class Jeu extends Observable implements Runnable {
     public int TIME = 0;
     public static final int SIZE_X = 20;
     public static final int SIZE_Y = 20;
+
 
     private Pacman pm;
 
@@ -91,37 +93,37 @@ public class Jeu extends Observable implements Runnable {
     /** Si le déclacement de l'entité est autorisé (pas de mur ou autre entité), il est réalisé
      */
     public boolean deplacerEntite(Entite e, Direction d) {    
-        boolean retour;
+        boolean retour = false;
         Point pCourant = map.get(e);
         Point pCible = calculerPointCible(pCourant, d);
-        if (contenuDansGrille(pCible)) { // a adapter (collisions murs, etc.)
+        if (e instanceof Pacman && pCible != new Point(-1, 10) && pCible != new Point(20, 10) && objetALaPosition(pCible) instanceof Fantome) {
+            Fantome f = (Fantome)getGrille()[pCible.x][pCible.y];
+            if(!getPacman().getBoostee()){
+                if (!f.getMort())getPacman().setMort(true);
+                else deplacerEntite(pCourant, pCible, getPacman());
+            }
+            else {
+                f.setMort(true);
+                deplacerEntite(pCourant, pCible, getPacman());
+            }
+        }
+        else if (e instanceof Fantome && pCible != new Point(-1, 10) && pCible != new Point(20, 10) && objetALaPosition(pCible) instanceof Pacman){
+            Fantome f = (Fantome)e;
+            if(!getPacman().getBoostee()) {
+                if (!f.getMort())getPacman().setMort(true);
+                deplacerEntite(pCourant, pCible, f);
+            }
+            else {
+                f.setMort(true);
+                deplacerEntite(pCourant, pCible, f);
+            }
+        }
+        else if (contenuDansGrille(pCible)) { // a adapter (collisions murs, etc.)
             if (pCible.x == -1 && pCible.y == 10) deplacerEntite(pCourant, new Point(19, 10), e);
             else if (pCible.x == 20 && pCible.y == 10) deplacerEntite(pCourant, new Point(0, 10), e);
             else if (objetALaPosition(pCible) == null)deplacerEntite(pCourant, pCible, e);
+
             retour = true;
-        }
-        else {
-            if (e instanceof Pacman && objetALaPosition(pCible) instanceof Fantome) {
-                Fantome f = (Fantome)getGrille()[pCible.x][pCible.y];
-                if(!getPacman().getBoostee()){
-                    if (!f.getMort())getPacman().setMort(true);
-                    deplacerEntite(pCourant, pCible, f);
-                }
-                else {
-                    f.setMort(true);
-                }
-            }
-            else if (e instanceof Fantome && objetALaPosition(pCible) instanceof Pacman){
-                Fantome f = (Fantome)e;
-                if(!getPacman().getBoostee()) {
-                    if (!f.getMort())getPacman().setMort(true);
-                    deplacerEntite(pCourant, pCible, f);
-                }
-                else {
-                    f.setMort(true);
-                }
-            }
-            retour = false;
         }
         return retour;
     }
@@ -879,6 +881,7 @@ public class Jeu extends Observable implements Runnable {
                 Logger.getLogger(Pacman.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+        JOptionPane.showMessageDialog(null, "Pacman est mort !", "GAME OVER", JOptionPane.WARNING_MESSAGE); 
+        System.exit(0);
     }
 }
