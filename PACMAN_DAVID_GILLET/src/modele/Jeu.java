@@ -98,7 +98,7 @@ public class Jeu extends Observable implements Runnable {
         Point pCible = calculerPointCible(pCourant, d);
         if (e instanceof Pacman && pCible != new Point(-1, 10) && pCible != new Point(20, 10) && objetALaPosition(pCible) instanceof Fantome) {
             Fantome f = (Fantome)getGrille()[pCible.x][pCible.y];
-            if(!getPacman().getBoostee()){
+            if(!getPacman().getBooste()){
                 if (!f.getMort())getPacman().setMort(true);
                 else deplacerEntite(pCourant, pCible, getPacman());
             }
@@ -109,7 +109,7 @@ public class Jeu extends Observable implements Runnable {
         }
         else if (e instanceof Fantome && pCible != new Point(-1, 10) && pCible != new Point(20, 10) && objetALaPosition(pCible) instanceof Pacman){
             Fantome f = (Fantome)e;
-            if(!getPacman().getBoostee()) {
+            if(!getPacman().getBooste()) {
                 if (!f.getMort())getPacman().setMort(true);
                 deplacerEntite(pCourant, pCible, f);
             }
@@ -124,6 +124,29 @@ public class Jeu extends Observable implements Runnable {
             else if (objetALaPosition(pCible) == null)deplacerEntite(pCourant, pCible, e);
 
             retour = true;
+        }
+        else {
+            if (e instanceof Pacman && objetALaPosition(pCible) instanceof Fantome) {
+                Fantome f = (Fantome)getGrille()[pCible.x][pCible.y];
+                if(!getPacman().getBooste()){
+                    if (!f.getMort())getPacman().setMort(true);
+                    deplacerEntite(pCourant, pCible, f);
+                }
+                else {
+                    f.setMort(true);
+                }
+            }
+            else if (e instanceof Fantome && objetALaPosition(pCible) instanceof Pacman){
+                Fantome f = (Fantome)e;
+                if(!getPacman().getBooste()) {
+                    if (!f.getMort())getPacman().setMort(true);
+                    deplacerEntite(pCourant, pCible, f);
+                }
+                else {
+                    f.setMort(true);
+                }
+            }
+            retour = false;
         }
         return retour;
     }
@@ -876,7 +899,7 @@ public class Jeu extends Observable implements Runnable {
             notifyObservers(); // notification de l'observer pour le raffraichisssement graphique
             try {
                 Thread.sleep(500); // pause de 0.5s
-                if(getPacman().getBoostee())TIME++;
+                if(getPacman().getBooste())TIME++;
             } catch (InterruptedException ex) {
                 Logger.getLogger(Pacman.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -5,8 +5,6 @@
  */
 package modele;
 
-import java.util.Random;
-
 /**
  *
  * @author david
