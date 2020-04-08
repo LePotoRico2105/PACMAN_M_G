@@ -903,7 +903,10 @@ public class Jeu extends Observable implements Runnable {
                 Logger.getLogger(Pacman.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        JOptionPane.showMessageDialog(null, "Pacman est mort !", "GAME OVER", JOptionPane.WARNING_MESSAGE); 
-        System.exit(0);
+        if(getPacman().getNbVies() == 0){
+            JOptionPane.showMessageDialog(null, "Pacman est mort !", "GAME OVER", JOptionPane.WARNING_MESSAGE);
+            System.exit(0);
+        } 
+        else if (getPacman().getNbVies() < 3) JOptionPane.showMessageDialog(null, "il vous reste : " + getPacman().getNbVies() + " vies", "VIE PERDUE", JOptionPane.INFORMATION_MESSAGE);
     }
 }
