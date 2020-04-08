@@ -428,7 +428,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                             jeu.TIME = 0;
                             try {
                                 if(clipMusiqueFond.isActive()) clipMusiqueFond.stop();
-                                if (compteurMusiqueSuperPacman == 0) clipSuperPacman.open(audioSuperPacman);
+                                if (compteurMusiqueSuperPacman == 0 || jeu.getPacman().getNbVies() < 3) clipSuperPacman.open(audioSuperPacman);
                                 clipSuperPacman.setFramePosition(0);
                                 clipSuperPacman.start();
                                 clipSuperPacman.loop(Clip.LOOP_CONTINUOUSLY);
@@ -473,6 +473,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                                 try {
                                     clipMangerPastille.stop();
                                     if (compteurMusiqueMangerFantome == 0) clipMangerFantome.open(audioMangerFantome);
+                                    
                                     clipMangerFantome.start();
                                     clipMangerFantome.setFramePosition(0);
                                     compteurMusiqueMangerFantome++;
