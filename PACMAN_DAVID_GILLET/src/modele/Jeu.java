@@ -898,7 +898,7 @@ public class Jeu extends Observable implements Runnable {
             notifyObservers(); // notification de l'observer pour le raffraichisssement graphique
             try {
                 Thread.sleep(500); // pause de 0.5s
-                if(getPacman().getBooste())TIME++;
+                TIME++;
             } catch (InterruptedException ex) {
                 Logger.getLogger(Pacman.class.getName()).log(Level.SEVERE, null, ex);
             }
