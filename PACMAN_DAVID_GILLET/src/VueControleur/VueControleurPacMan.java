@@ -84,6 +84,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private ImageIcon icoLogoTransparent;
     private ImageIcon icoLogoCouleur;
     private ImageIcon icoMur;
+    private ImageIcon icoSpawn;
     private ImageIcon icoMurDroit1;
     private ImageIcon icoMurDroit2;
     private ImageIcon icoMurFin1;
@@ -216,6 +217,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         icoLogoCouleur = chargerIcone("Images/logoCouleur.png", 0.0);
         icoCouloir = chargerIcone("Images/couloir.png", 0.0);
         icoMur = chargerIcone("Images/mur.png", 0.0);
+        icoSpawn = chargerIcone("Images/spawn.png", 0.0);
         icoMurDroit1 = chargerIcone("Images/murDroit.png", 0.0);
         icoMurDroit2 = chargerIcone("Images/murDroit.png", 90.0);
         icoMurFin1 = chargerIcone("Images/murFin.png", 0.0);
@@ -333,7 +335,8 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private void mettreAJourAffichage() {
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
-                if(jeu.getGrilleMurs()[x][y] != null){
+                if ((x == 8 && y == 9) || (x == 11 && y == 9))tabJLabel[x][y].setIcon(icoSpawn);
+                else if(jeu.getGrilleMurs()[x][y] != null){
                     if (null != jeu.getGrilleMurs()[x][y].getType())switch (jeu.getGrilleMurs()[x][y].getType()) {
                         case "droit":
                             if (jeu.getGrilleMurs()[x][y].getRotationType() == 1) tabJLabel[x][y].setIcon(icoMurDroit1);
@@ -471,10 +474,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 else if (jeu.getGrillePastilles()[x][y] instanceof Pastille && !jeu.getGrillePastilles()[x][y].getEstMange()) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue     
                     if("petite".equals(jeu.getGrillePastilles()[x][y].getType()))tabJLabel[x][y].setIcon(icoPastilleS);
                     else if("grande".equals(jeu.getGrillePastilles()[x][y].getType()))tabJLabel[x][y].setIcon(icoPastilleL);
-                }
-                else{ // si la grille du modèle contient ni Pacman, ni murs, on associe l'icône Pastille du côté de la vue     
-                tabJLabel[x][y].setIcon(icoCouloir); 
-                }
+                }else tabJLabel[x][y].setIcon(icoCouloir); 
                 if(jeu.TIME >= 30) {
                     jeu.getPacman().setBooste(false);
                     jeu.TIME = 0; 
