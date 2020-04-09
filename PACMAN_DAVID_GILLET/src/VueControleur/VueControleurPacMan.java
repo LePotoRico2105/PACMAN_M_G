@@ -54,7 +54,6 @@ public class VueControleurPacMan extends JFrame implements Observer {
 
     private final int sizeX; // taille de la grille affichée
     private final int sizeY;
-    private int compteurMusiqueSuperPacman, compteurMusiqueMangerFantome, compteurMusiqueMangerPastille;
 
     private ImageIcon icone; // icones affichées dans la grille
     private ImageIcon icoPacman1;
@@ -246,7 +245,14 @@ public class VueControleurPacMan extends JFrame implements Observer {
         icoMurAngle3 = chargerIcone("Images/murAngle.png", 180.0);
         icoMurAngle4 = chargerIcone("Images/murAngle.png", 270.0);
     }
-    
+    private void reinitialisationMusique(){
+        if (clipSuperPacman.isActive()) clipSuperPacman.stop();
+        if (clipPacmanMort.isActive()) clipPacmanMort.stop();
+        if (clipMangerPastille.isActive()) clipMangerPastille.stop();
+        if (clipMusiqueFond.isActive()) clipMusiqueFond.stop();
+        clipMusiqueFond.loop(Clip.LOOP_CONTINUOUSLY);
+        clipMusiqueFond.start();
+    }
     private void initialisationMusique(){
         try {
             audioMusiqueFond = AudioSystem.getAudioInputStream(new File("Sounds/musiqueFond.wav").getAbsoluteFile());
@@ -260,16 +266,16 @@ public class VueControleurPacMan extends JFrame implements Observer {
             clipMangerPastille = AudioSystem.getClip();
             clipMangerFantome = AudioSystem.getClip();
             clipMusiqueFond.open(audioMusiqueFond);
+            clipSuperPacman.open(audioSuperPacman);
+            clipPacmanMort.open(audioPacmanMort);
+            clipMangerPastille.open(audioMangerPastille);
+            clipMangerFantome.open(audioMangerFantome);
+            clipMusiqueFond.loop(Clip.LOOP_CONTINUOUSLY);
             clipMusiqueFond.start();
             clipSuperPacman.stop();
             clipPacmanMort.stop();
             clipMangerPastille.stop();
             clipMangerFantome.stop();
-            clipMusiqueFond.loop(Clip.LOOP_CONTINUOUSLY);
-            clipMusiqueFond_volume = (FloatControl) clipMusiqueFond.getControl(FloatControl.Type.MASTER_GAIN);
-            double gain = 0.05;
-            float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
-            clipMusiqueFond_volume.setValue(dB);           
         } catch(IOException | LineUnavailableException | UnsupportedAudioFileException ex) {
             ex.printStackTrace();
         }
@@ -426,20 +432,16 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         if ("grande".equals(jeu.getGrillePastilles()[x][y].getType()) && !jeu.getGrillePastilles()[x][y].getEstMange()){
                             jeu.getPacman().setBooste(true);
                             jeu.TIME = 0;
-                            try {
-                                if(clipMusiqueFond.isActive()) clipMusiqueFond.stop();
-                                if (compteurMusiqueSuperPacman == 0) clipSuperPacman.open(audioSuperPacman);
-                                clipSuperPacman.setFramePosition(0);
-                                clipSuperPacman.start();
-                                clipSuperPacman.loop(Clip.LOOP_CONTINUOUSLY);
-                                compteurMusiqueSuperPacman++;
-                                clipSuperPacman_volume = (FloatControl) clipSuperPacman.getControl(FloatControl.Type.MASTER_GAIN);
-                                double gain = 0.1;
-                                float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
-                                clipSuperPacman_volume.setValue(dB);
-                            } catch(IOException | LineUnavailableException ex) {
-                                ex.printStackTrace();
+                            if(clipMusiqueFond.isActive()) clipMusiqueFond.stop();
+                            clipSuperPacman.loop(Clip.LOOP_CONTINUOUSLY);
+                            clipSuperPacman.start();
+                        }
+                        else if ("petite".equals(jeu.getGrillePastilles()[x][y].getType()) && !jeu.getGrillePastilles()[x][y].getEstMange()){
+                            if(!jeu.getPacman().getBooste()){
+                                clipMangerPastille.setFramePosition(0);
+                                clipMangerPastille.start();
                             }
+                            
                         }
                         jeu.getGrillePastilles()[x][y].mangerPastille();
                         if(null != jeu.getPacman().getDirection())switch (jeu.getPacman().getDirection()) {
@@ -513,28 +515,19 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 if(jeu.TIME % 30 == 29) {
                     jeu.getPacman().setBooste(false);
                     jeu.TIME = 0; 
-                        clipSuperPacman.stop();
-                        clipMusiqueFond.setFramePosition(0);
-                        clipMusiqueFond.start();
-                        clipMusiqueFond.loop(Clip.LOOP_CONTINUOUSLY);
+                    if(clipSuperPacman.isActive()) clipSuperPacman.stop();
+                    clipMusiqueFond.loop(Clip.LOOP_CONTINUOUSLY);
+                    clipMusiqueFond.start();
                 }
             }
         }
         if (jeu.getPacman().getMort()){
             jeu.getPacman().setNbVies(jeu.getPacman().getNbVies()-1);
-            try {
-                clipMangerPastille.stop();
-                clipMusiqueFond.stop();
-                clipPacmanMort.open(audioPacmanMort);
-                clipPacmanMort.start();
-                clipPacmanMort_volume = (FloatControl) clipPacmanMort.getControl(FloatControl.Type.MASTER_GAIN);
-                double gain = 0.1;
-                float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
-                clipPacmanMort_volume.setValue(dB);
-            } catch(IOException | LineUnavailableException ex) {
-                ex.printStackTrace();
-            }
-            initialisationMusique();
+            if(clipMangerPastille.isActive())clipMangerPastille.stop();
+            if(clipMusiqueFond.isActive())clipMusiqueFond.stop();
+            clipPacmanMort.setFramePosition(0);
+            clipPacmanMort.start();
+            reinitialisationMusique();
         }
     }
 
