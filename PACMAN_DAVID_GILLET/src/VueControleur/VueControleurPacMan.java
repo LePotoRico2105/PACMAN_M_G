@@ -1,7 +1,6 @@
 package VueControleur;
 
 
-import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -54,6 +53,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
 
     private final int sizeX; // taille de la grille affichée
     private final int sizeY;
+    private int score = 0;
 
     private ImageIcon icone; // icones affichées dans la grille
     private ImageIcon icoPacman1;
@@ -430,6 +430,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 }
                     else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue 
                         if ("grande".equals(jeu.getGrillePastilles()[x][y].getType()) && !jeu.getGrillePastilles()[x][y].getEstMange()){
+                            score = score + 50;
                             jeu.getPacman().setBooste(true);
                             jeu.TIME = 0;
                             if(clipMusiqueFond.isActive()) clipMusiqueFond.stop();
@@ -437,9 +438,10 @@ public class VueControleurPacMan extends JFrame implements Observer {
                             clipSuperPacman.start();
                         }
                         else if ("petite".equals(jeu.getGrillePastilles()[x][y].getType()) && !jeu.getGrillePastilles()[x][y].getEstMange()){
+                            score = score + 10;
                             if(!jeu.getPacman().getBooste()){
                                 clipMangerPastille.setFramePosition(0);
-                                clipMangerPastille.start();
+                                clipMangerPastille.start();  
                             }
                             
                         }
@@ -470,12 +472,12 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         Pacman p = (Pacman)jeu.getPacman();
                         if (null != f.getColor()){ 
                             if (f.getMort()){
+                                score = score + 200;
                                 tabJLabel[x][y].setIcon(icoDead);
                                 /*
                                 try {
                                     clipMangerPastille.stop();
                                     if (compteurMusiqueMangerFantome == 0) clipMangerFantome.open(audioMangerFantome);
-                                    
                                     clipMangerFantome.start();
                                     clipMangerFantome.setFramePosition(0);
                                     compteurMusiqueMangerFantome++;
