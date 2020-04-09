@@ -475,6 +475,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                                 try {
                                     clipMangerPastille.stop();
                                     if (compteurMusiqueMangerFantome == 0) clipMangerFantome.open(audioMangerFantome);
+                                    
                                     clipMangerFantome.start();
                                     clipMangerFantome.setFramePosition(0);
                                     compteurMusiqueMangerFantome++;
