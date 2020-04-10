@@ -32,6 +32,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import modele.Direction;
@@ -428,22 +429,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                             break;
                      }
                 }
-                    else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue 
-                        if ("grande".equals(jeu.getGrillePastilles()[x][y].getType()) && !jeu.getGrillePastilles()[x][y].getEstMange()){
-                            jeu.getPacman().setBooste(true);
-                            jeu.TIME = 0;
-                            if(clipMusiqueFond.isActive()) clipMusiqueFond.stop();
-                            clipSuperPacman.loop(Clip.LOOP_CONTINUOUSLY);
-                            clipSuperPacman.start();
-                        }
-                        else if ("petite".equals(jeu.getGrillePastilles()[x][y].getType()) && !jeu.getGrillePastilles()[x][y].getEstMange()){
-                            if(!jeu.getPacman().getBooste()){
-                                clipMangerPastille.setFramePosition(0);
-                                clipMangerPastille.start();
-                            }
-                            
-                        }
-                        jeu.getGrillePastilles()[x][y].mangerPastille();
+                    else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue                        
                         if(null != jeu.getPacman().getDirection())switch (jeu.getPacman().getDirection()) {
                             case droite:
                                 if(jeu.TIME%2 == 0)tabJLabel[x][y].setIcon(icoPacman1);
@@ -471,24 +457,8 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         if (null != f.getColor()){ 
                             if (f.getMort()){
                                 tabJLabel[x][y].setIcon(icoDead);
-                                /*
-                                try {
-                                    clipMangerPastille.stop();
-                                    if (compteurMusiqueMangerFantome == 0) clipMangerFantome.open(audioMangerFantome);
-                                    
-                                    clipMangerFantome.start();
-                                    clipMangerFantome.setFramePosition(0);
-                                    compteurMusiqueMangerFantome++;
-                                    clipMangerFantome_volume = (FloatControl) clipMangerFantome.getControl(FloatControl.Type.MASTER_GAIN);
-                                    double gain = 0.1;
-                                    float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
-                                    clipMangerFantome_volume.setValue(dB);
-                                } catch(IOException | LineUnavailableException ex) {
-                                    ex.printStackTrace();
-                                }
-                                */
                             }
-                            else if (p.getBooste()){
+                            else if (f.getEatable()){
                                 tabJLabel[x][y].setIcon(icoEatable);
                             }    
                             else switch (f.getColor()) {
@@ -513,15 +483,13 @@ public class VueControleurPacMan extends JFrame implements Observer {
                     if("petite".equals(jeu.getGrillePastilles()[x][y].getType()))tabJLabel[x][y].setIcon(icoPastilleS);
                     else if("grande".equals(jeu.getGrillePastilles()[x][y].getType()))tabJLabel[x][y].setIcon(icoPastilleL);
                 }else tabJLabel[x][y].setIcon(icoCouloir); 
-                if(jeu.TIME % 30 == 29) {
-                    jeu.getPacman().setBooste(false);
-                    jeu.TIME = 0; 
-                    if(clipSuperPacman.isActive()) clipSuperPacman.stop();
-                    clipMusiqueFond.loop(Clip.LOOP_CONTINUOUSLY);
-                    clipMusiqueFond.start();
-                }
+                
             }
         }
+        
+    }
+    
+    public void mettreAJourSonJeu(){
         if (jeu.getPacman().getMort()){
             jeu.getPacman().setNbVies(jeu.getPacman().getNbVies()-1);
             if(clipMangerPastille.isActive())clipMangerPastille.stop();
@@ -530,12 +498,89 @@ public class VueControleurPacMan extends JFrame implements Observer {
             clipPacmanMort.start();
             reinitialisationMusique();
         }
+        if(jeu.TIME % 30 == 29) {
+            jeu.getPacman().setBooste(false);
+            jeu.TIME = 0; 
+            for (int x = 0; x < sizeX; x++) {
+                for (int y = 0; y < sizeY; y++) {
+                    if (jeu.getGrille()[x][y] instanceof Fantome){
+                        Fantome f = (Fantome)jeu.getGrille()[x][y];
+                        f.setEatable(false);
+                        jeu.getGrille()[x][y] = f;
+                    }
+                }
+            }
+            if(clipSuperPacman.isActive()) clipSuperPacman.stop();
+            clipMusiqueFond.loop(Clip.LOOP_CONTINUOUSLY);
+            clipMusiqueFond.start();
+        }
+        int px = jeu.getEmplacementEntite(jeu.getPacman()).x;
+        int py = jeu.getEmplacementEntite(jeu.getPacman()).y;
+        if ("grande".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
+            // ajout score
+            jeu.getPacman().setBooste(true);
+            for (int x = 0; x < sizeX; x++) {
+                for (int y = 0; y < sizeY; y++) {
+                    if (jeu.getGrille()[x][y] instanceof Fantome){
+                        Fantome f = (Fantome)jeu.getGrille()[x][y];
+                        f.setEatable(true);
+                        jeu.getGrille()[x][y] = f;
+                    }
+                }
+            }
+            jeu.TIME = 0;
+            if(clipMusiqueFond.isActive()) clipMusiqueFond.stop();
+            clipSuperPacman.loop(Clip.LOOP_CONTINUOUSLY);
+            clipSuperPacman.start();
+            jeu.getGrillePastilles()[px][py].mangerPastille();
+        }
+        else if ("petite".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
+            // ajout score
+            if(!jeu.getPacman().getBooste()){
+                clipMangerPastille.setFramePosition(0);
+                clipMangerPastille.start();
+            }   
+            jeu.getGrillePastilles()[px][py].mangerPastille();
+        }
+        if(jeu.getPacman().getNbVies() == 0){
+            JOptionPane.showMessageDialog(null, "Pacman est mort !", "GAME OVER", JOptionPane.WARNING_MESSAGE);
+            System.exit(0);
+        } 
+        else if (jeu.getPacman().getMort()) {
+            JOptionPane.showMessageDialog(null, "il vous reste : " + jeu.getPacman().getNbVies() + " vies", "VIE PERDUE", JOptionPane.INFORMATION_MESSAGE);
+            jeu.replacerEntites();
+        }
+        for (int x = 0; x < sizeX; x++) {
+            for (int y = 0; y < sizeY; y++) {
+                if (jeu.getGrille()[x][y] instanceof Fantome){
+                    Fantome f = (Fantome)jeu.getGrille()[x][y];
+                    if (f.getMort()){
+                        if (f.getSpawntime() == 0){
+                            jeu.replacerFantome((Fantome)jeu.getGrille()[x][y]);
+                            f.setSpawntime(f.getSpawntime()+1);
+                        }
+                        else if (f.getSpawntime() == 5){
+                            f.setSpawntime(0);
+                            f.setMort(false);
+                            f.setEatable(false);
+                            jeu.getGrille()[x][y] = f;
+                        }
+                        else{
+                            f.setSpawntime(f.getSpawntime()+1);
+                            jeu.getGrille()[x][y] = f; 
+                        }
+                    }
+                }
+            }
+        }
+        jeu.TIME++;
     }
 
     @Override
     public void update(Observable o, Object arg) {
         mettreAJourAffichage();
-/*
+        mettreAJourSonJeu();
+/*      
         SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
