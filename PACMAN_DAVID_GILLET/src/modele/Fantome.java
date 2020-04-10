@@ -17,11 +17,15 @@ public class Fantome extends Entite {
     private Random r = new Random();
     private String color;
     private boolean mort;
+    private boolean eatable;
+    private int spawntime;
 
     public Fantome(Jeu _jeu, String p_color) {
         super(_jeu);
         color = p_color;
         mort = false;
+        eatable = false;
+        spawntime = 0;
     }
     
     public String getColor(){
@@ -34,6 +38,22 @@ public class Fantome extends Entite {
     
     public void setMort(boolean _mort){
         mort = _mort;
+    }
+    
+    public boolean getEatable(){
+        return eatable;
+    }
+    
+    public void setEatable(boolean _eatable){
+        eatable = _eatable;
+    }
+    
+    public int getSpawntime(){
+        return spawntime;
+    }
+    
+    public void setSpawntime(int _spawntime){
+        spawntime = _spawntime;
     }
     
     @Override
