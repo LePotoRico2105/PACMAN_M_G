@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -458,6 +459,8 @@ public class VueControleurPacMan extends JFrame implements Observer {
                             if (f.getMort()){
                                 score = score + 200;
                                 tabJLabel[x][y].setIcon(icoDead);
+                                clipMangerFantome.setFramePosition(0);
+                                clipMangerFantome.start();
                             }
                             else if (f.getEatable()){
                                 tabJLabel[x][y].setIcon(icoEatable);
@@ -544,7 +547,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             jeu.getGrillePastilles()[px][py].mangerPastille();
         }
         if(jeu.getPacman().getNbVies() == 0){
-            JOptionPane.showMessageDialog(null, "Pacman est mort !", "GAME OVER", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Pacman est mort ! Votre score est de : " + score + " points", "GAME OVER", JOptionPane.WARNING_MESSAGE);
             System.exit(0);
         } 
         else if (jeu.getPacman().getMort()) {
@@ -559,6 +562,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         if (f.getSpawntime() == 0){
                             jeu.replacerFantome((Fantome)jeu.getGrille()[x][y]);
                             f.setSpawntime(f.getSpawntime()+1);
+                            clipMangerFantome.stop();
                         }
                         else if (f.getSpawntime() == 5){
                             f.setSpawntime(0);
