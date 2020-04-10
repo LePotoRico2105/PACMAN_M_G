@@ -1,7 +1,6 @@
 package VueControleur;
 
 
-import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -55,6 +54,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
 
     private final int sizeX; // taille de la grille affichée
     private final int sizeY;
+    private int score = 0;
 
     private ImageIcon icone; // icones affichées dans la grille
     private ImageIcon icoPacman1;
@@ -429,7 +429,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                             break;
                      }
                 }
-                    else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue                        
+                    else if (jeu.getGrille()[x][y] instanceof Pacman) { // si la grille du modèle contient un Pacman, on associe l'icône Pacman du côté de la vue 
                         if(null != jeu.getPacman().getDirection())switch (jeu.getPacman().getDirection()) {
                             case droite:
                                 if(jeu.TIME%2 == 0)tabJLabel[x][y].setIcon(icoPacman1);
@@ -456,6 +456,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         Pacman p = (Pacman)jeu.getPacman();
                         if (null != f.getColor()){ 
                             if (f.getMort()){
+                                score = score + 200;
                                 tabJLabel[x][y].setIcon(icoDead);
                             }
                             else if (f.getEatable()){
@@ -517,7 +518,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         int px = jeu.getEmplacementEntite(jeu.getPacman()).x;
         int py = jeu.getEmplacementEntite(jeu.getPacman()).y;
         if ("grande".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
-            // ajout score
+            score = score + 50;
             jeu.getPacman().setBooste(true);
             for (int x = 0; x < sizeX; x++) {
                 for (int y = 0; y < sizeY; y++) {
@@ -535,7 +536,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             jeu.getGrillePastilles()[px][py].mangerPastille();
         }
         else if ("petite".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
-            // ajout score
+            score = score + 10;
             if(!jeu.getPacman().getBooste()){
                 clipMangerPastille.setFramePosition(0);
                 clipMangerPastille.start();
