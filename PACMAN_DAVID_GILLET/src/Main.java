@@ -1,5 +1,6 @@
 
 import VueControleur.VueControleurPacMan;
+import java.io.IOException;
 import modele.Jeu;
 import modele.Pacman;
 
@@ -14,7 +15,7 @@ import modele.Pacman;
  * @author freder
  */
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         
         Jeu jeu = new Jeu();
         
