@@ -457,10 +457,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         Pacman p = (Pacman)jeu.getPacman();
                         if (null != f.getColor()){ 
                             if (f.getMort()){
-                                score = score + 200;
                                 tabJLabel[x][y].setIcon(icoDead);
-                                clipMangerFantome.setFramePosition(0);
-                                clipMangerFantome.start();
                             }
                             else if (f.getEatable()){
                                 tabJLabel[x][y].setIcon(icoEatable);
@@ -562,7 +559,9 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         if (f.getSpawntime() == 0){
                             jeu.replacerFantome((Fantome)jeu.getGrille()[x][y]);
                             f.setSpawntime(f.getSpawntime()+1);
-                            clipMangerFantome.stop();
+                            clipMangerFantome.setFramePosition(0);
+                            clipMangerFantome.start();
+                            score = score + 200;
                         }
                         else if (f.getSpawntime() == 5){
                             f.setSpawntime(0);
