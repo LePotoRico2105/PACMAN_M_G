@@ -6,6 +6,10 @@
 package modele;
 
 import java.awt.Point;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.logging.Level;
@@ -40,10 +44,10 @@ public class Jeu extends Observable implements Runnable {
     // TODO : ajouter les murs, couloir, PacGums, et adapter l'ensemble des fonctions (prévoir le raffraichissement également du côté de la vue)
     
     
-    public Jeu() {
+    public Jeu() throws IOException {
         initialisationDesPastilles();
         initialisationDesEntites();
-        initialisationDesMurs();
+        initialisationDesMaps();
     }
     
     public Entite[][] getGrille() {
@@ -66,6 +70,18 @@ public class Jeu extends Observable implements Runnable {
         return pm;
     }
     
+    public String lireFichierTexte(String nomFichier) throws FileNotFoundException, IOException{
+        BufferedReader in = new BufferedReader(new FileReader("Maps/"+ nomFichier + ".txt"));
+        String texte = "";
+        String line = "";
+        while ((line = in.readLine()) != null)
+        {
+      // Afficher le contenu du fichier
+          texte = texte + "\n" + line;
+        }
+        in.close();
+        return texte;
+    }
     public void replacerEntites(){
         grilleEntites = new Entite[SIZE_X][SIZE_Y];
         map = new  HashMap<Entite, Point>();
@@ -243,9 +259,51 @@ public class Jeu extends Observable implements Runnable {
         }
     }
     
-    public void initialisationDesMurs(){
+    public void initialisationDesMaps() throws IOException{ 
+        String mapClassiqueString = lireFichierTexte("classique");
         Mur mur;
+        int index = 1;
+        int[][][] mapClassique = new int[SIZE_X][SIZE_Y][2];
         
+        //creation tableau maps
+        for (int y = 0; y < SIZE_Y; y++)
+            for (int x = 0; x < SIZE_X; x++){
+                mapClassique[x][y][0] = Character.getNumericValue(mapClassiqueString.charAt(index));
+                index = index + 2;
+                mapClassique[x][y][1] = Character.getNumericValue(mapClassiqueString.charAt(index));
+                index = index + 2;              
+            }
+        
+        //placements murs
+        // 1 droit 2 fin 3 coté 4 angle 5 mur
+        for (int y = 0; y < SIZE_Y; y++)
+            for (int x = 0; x < SIZE_X; x++){
+            switch (mapClassique[x][y][0]) {
+                case 1:
+                    mur = new Mur(this, "droit", mapClassique[x][y][1]);
+                    break;
+                case 2:
+                    mur = new Mur(this, "fin", mapClassique[x][y][1]);
+                    break;
+                case 3:
+                    mur = new Mur(this, "cote", mapClassique[x][y][1]);
+                    break;
+                case 4:
+                    mur = new Mur(this, "angle", mapClassique[x][y][1]);
+                    break;
+                case 5:
+                    mur = new Mur(this, "mur", mapClassique[x][y][1]);
+                    break;
+                default:
+                    mur = null;
+                    break;
+            }
+                if (mur != null){
+                    grilleMurs[x][y] = mur;
+                    mapMurs.put(mur, new Point(x,y)); 
+                }   
+            }
+        /*
         // spawn fantome
         
         // J10
@@ -919,6 +977,7 @@ public class Jeu extends Observable implements Runnable {
             grilleMurs[i][13] = mur;
             mapMurs.put(mur, new Point(i,13));
         }
+*/
 }
     
 
@@ -936,5 +995,5 @@ public class Jeu extends Observable implements Runnable {
                 Logger.getLogger(Pacman.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }
+    } 
 }
