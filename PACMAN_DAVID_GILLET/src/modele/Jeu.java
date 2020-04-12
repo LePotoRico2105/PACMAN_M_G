@@ -45,9 +45,9 @@ public class Jeu extends Observable implements Runnable {
     
     
     public Jeu() throws IOException {
+        initialisationDesMaps(2);
         initialisationDesPastilles();
         initialisationDesEntites();
-        initialisationDesMaps();
     }
     
     public Entite[][] getGrille() {
@@ -259,23 +259,28 @@ public class Jeu extends Observable implements Runnable {
         }
     }
     
-    public void initialisationDesMaps() throws IOException{ 
+    public void initialisationDesMaps(int map) throws IOException{ 
         String mapClassiqueString = lireFichierTexte("classique");
+        String map2String = lireFichierTexte("2");
         Mur mur;
         int index = 1;
         int[][][] mapClassique = new int[SIZE_X][SIZE_Y][2];
+        int[][][] map2 = new int[SIZE_X][SIZE_Y][2];
         
         //creation tableau maps
         for (int y = 0; y < SIZE_Y; y++)
             for (int x = 0; x < SIZE_X; x++){
                 mapClassique[x][y][0] = Character.getNumericValue(mapClassiqueString.charAt(index));
+                map2[x][y][0] = Character.getNumericValue(map2String.charAt(index));
                 index = index + 2;
                 mapClassique[x][y][1] = Character.getNumericValue(mapClassiqueString.charAt(index));
+                map2[x][y][1] = Character.getNumericValue(map2String.charAt(index));
                 index = index + 2;              
             }
         
         //placements murs
         // 1 droit 2 fin 3 coté 4 angle 5 mur
+        if (map == 1){
         for (int y = 0; y < SIZE_Y; y++)
             for (int x = 0; x < SIZE_X; x++){
             switch (mapClassique[x][y][0]) {
@@ -303,7 +308,37 @@ public class Jeu extends Observable implements Runnable {
                     mapMurs.put(mur, new Point(x,y)); 
                 }   
             }
-}
+        }
+        else if (map == 2){
+        for (int y = 0; y < SIZE_Y; y++)
+            for (int x = 0; x < SIZE_X; x++){
+            switch (map2[x][y][0]) {
+                case 1:
+                    mur = new Mur(this, "droit", map2[x][y][1]);
+                    break;
+                case 2:
+                    mur = new Mur(this, "fin", map2[x][y][1]);
+                    break;
+                case 3:
+                    mur = new Mur(this, "cote", map2[x][y][1]);
+                    break;
+                case 4:
+                    mur = new Mur(this, "angle", map2[x][y][1]);
+                    break;
+                case 5:
+                    mur = new Mur(this, "mur", map2[x][y][1]);
+                    break;
+                default:
+                    mur = null;
+                    break;
+            }
+                if (mur != null){
+                    grilleMurs[x][y] = mur;
+                    mapMurs.put(mur, new Point(x,y)); 
+                }   
+            }
+        }
+    }
     
 
     @Override
