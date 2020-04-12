@@ -261,20 +261,20 @@ public class Jeu extends Observable implements Runnable {
     
     public void initialisationDesMaps(int map) throws IOException{ 
         String mapClassiqueString = lireFichierTexte("classique");
-        String map2String = lireFichierTexte("2");
+        String mapHeadString = lireFichierTexte("head");
         Mur mur;
         int index = 1;
         int[][][] mapClassique = new int[SIZE_X][SIZE_Y][2];
-        int[][][] map2 = new int[SIZE_X][SIZE_Y][2];
+        int[][][] mapHead = new int[SIZE_X][SIZE_Y][2];
         
         //creation tableau maps
         for (int y = 0; y < SIZE_Y; y++)
             for (int x = 0; x < SIZE_X; x++){
                 mapClassique[x][y][0] = Character.getNumericValue(mapClassiqueString.charAt(index));
-                map2[x][y][0] = Character.getNumericValue(map2String.charAt(index));
+                mapHead[x][y][0] = Character.getNumericValue(mapHeadString.charAt(index));
                 index = index + 2;
                 mapClassique[x][y][1] = Character.getNumericValue(mapClassiqueString.charAt(index));
-                map2[x][y][1] = Character.getNumericValue(map2String.charAt(index));
+                mapHead[x][y][1] = Character.getNumericValue(mapHeadString.charAt(index));
                 index = index + 2;              
             }
         
@@ -312,21 +312,21 @@ public class Jeu extends Observable implements Runnable {
         else if (map == 2){
         for (int y = 0; y < SIZE_Y; y++)
             for (int x = 0; x < SIZE_X; x++){
-            switch (map2[x][y][0]) {
+            switch (mapHead[x][y][0]) {
                 case 1:
-                    mur = new Mur(this, "droit", map2[x][y][1]);
+                    mur = new Mur(this, "droit", mapHead[x][y][1]);
                     break;
                 case 2:
-                    mur = new Mur(this, "fin", map2[x][y][1]);
+                    mur = new Mur(this, "fin", mapHead[x][y][1]);
                     break;
                 case 3:
-                    mur = new Mur(this, "cote", map2[x][y][1]);
+                    mur = new Mur(this, "cote", mapHead[x][y][1]);
                     break;
                 case 4:
-                    mur = new Mur(this, "angle", map2[x][y][1]);
+                    mur = new Mur(this, "angle", mapHead[x][y][1]);
                     break;
                 case 5:
-                    mur = new Mur(this, "mur", map2[x][y][1]);
+                    mur = new Mur(this, "mur", mapHead[x][y][1]);
                     break;
                 default:
                     mur = null;
