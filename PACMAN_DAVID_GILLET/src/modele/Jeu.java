@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 public class Jeu extends Observable implements Runnable {
 
     public int TIME = 0;
+    private int numMap;
     public static final int SIZE_X = 20;
     public static final int SIZE_Y = 20;
 
@@ -40,16 +41,21 @@ public class Jeu extends Observable implements Runnable {
     private Mur[][] grilleMurs = new Mur[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
     private HashMap<Pastille, Point> mapPastilles = new  HashMap<Pastille, Point>(); // permet de récupérer la position d'une entité à partir de sa référence
     private Pastille[][] grillePastilles = new Pastille[SIZE_X][SIZE_Y]; // permet de récupérer une entité à partir de ses coordonnées
+   
     
-    // TODO : ajouter les murs, couloir, PacGums, et adapter l'ensemble des fonctions (prévoir le raffraichissement également du côté de la vue)
     
+    public Jeu() {
+        numMap = 0;
+    }
     
-    public Jeu() throws IOException {
-        initialisationDesMaps(2);
+    public void initialiserJeu() throws IOException{
+        initialisationDesMaps();
         initialisationDesPastilles();
         initialisationDesEntites();
     }
-    
+    public void choixMap(int _numMap){
+        numMap = _numMap;
+    }
     public Entite[][] getGrille() {
         return grilleEntites;
     }
@@ -259,7 +265,7 @@ public class Jeu extends Observable implements Runnable {
         }
     }
     
-    public void initialisationDesMaps(int map) throws IOException{ 
+    public void initialisationDesMaps() throws IOException{ 
         String mapClassiqueString = lireFichierTexte("classique");
         String mapHeadString = lireFichierTexte("head");
         Mur mur;
@@ -280,7 +286,7 @@ public class Jeu extends Observable implements Runnable {
         
         //placements murs
         // 1 droit 2 fin 3 coté 4 angle 5 mur
-        if (map == 1){
+        if (numMap == 1){
         for (int y = 0; y < SIZE_Y; y++)
             for (int x = 0; x < SIZE_X; x++){
             switch (mapClassique[x][y][0]) {
@@ -309,7 +315,7 @@ public class Jeu extends Observable implements Runnable {
                 }   
             }
         }
-        else if (map == 2){
+        else if (numMap == 2){
         for (int y = 0; y < SIZE_Y; y++)
             for (int x = 0; x < SIZE_X; x++){
             switch (mapHead[x][y][0]) {
