@@ -577,6 +577,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         }
                         else if (f.getSpawntime() == 5){
                             f.setSpawntime(0);
+                            f.setSorti(false);
                             f.setMort(false);
                             f.setEatable(false);
                             jeu.getGrille()[x][y] = f;
