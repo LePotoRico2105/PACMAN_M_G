@@ -18,6 +18,7 @@ public class Fantome extends Entite {
     private String color;
     private boolean mort;
     private boolean eatable;
+    private boolean sorti;
     private int spawntime;
 
     public Fantome(Jeu _jeu, String p_color) {
@@ -25,6 +26,7 @@ public class Fantome extends Entite {
         color = p_color;
         mort = false;
         eatable = false;
+        sorti = false;
         spawntime = 0;
     }
     
@@ -48,6 +50,14 @@ public class Fantome extends Entite {
         eatable = _eatable;
     }
     
+    public boolean getSorti(){
+        return sorti;
+    }
+    
+    public void setSorti(boolean _sorti){
+        sorti = _sorti;
+    }
+    
     public int getSpawntime(){
         return spawntime;
     }
@@ -59,7 +69,8 @@ public class Fantome extends Entite {
     @Override
     public void choixDirection() {  
         // développer une stratégie plus détaillée (utiliser regarderDansLaDirection(Entité, Direction) , ajouter murs, etc.)
-        if (d == null || jeu.regarderDansLaDirection(this, d) instanceof Mur || jeu.regarderDansLaDirection(this, d) instanceof Fantome)
+        if (getColor() == "rouge" && getEatable() == false && jeu.directionVersPacman(this) != null && sorti == true) d = jeu.directionVersPacman(this);
+        else if (d == null || jeu.regarderDansLaDirection(this, d) instanceof Mur || jeu.regarderDansLaDirection(this, d) instanceof Fantome)
         switch (r.nextInt(4)) {
               case 0:
                   d = Direction.droite;
