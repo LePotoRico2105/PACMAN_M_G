@@ -15,17 +15,17 @@ import modele.Pacman;
  * @author freder
  */
 public class Main {
-    public static void main(String[] args) throws IOException {
-        
+    public static void main(String[] args) throws IOException {      
         Jeu jeu = new Jeu();
-        
+
         VueControleurPacMan vc = new VueControleurPacMan(Jeu.SIZE_X, Jeu.SIZE_Y);
         
         jeu.addObserver(vc);
         vc.setJeu(jeu);
         
         vc.setVisible(true);
-        
+        jeu.choixMap(vc.choisirMap());
+        jeu.initialiserJeu();
         jeu.start();
     }
 }
