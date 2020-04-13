@@ -150,6 +150,29 @@ public class Jeu extends Observable implements Runnable {
         Point positionEntite = map.get(e);
         return calculerPointCible(positionEntite, d);
     }
+    
+    public Direction directionVersPacman(Entite e){
+        Direction d = null;
+        Direction meilleurDirection = null;
+        for (int i = 0; i< 4; i++){
+            switch (i) {
+                case 0:
+                    d = Direction.gauche;
+                    break;
+                case 1:
+                    d = Direction.haut;
+                    break;
+                case 2:
+                    d = Direction.droite;
+                    break;
+                default:
+                    d = Direction.bas;
+                    break;
+            }
+            if (meilleurDirection == null)if ((regarderDansLaDirectionPoint(e, d).distance(map.get(pm)) <  regarderDansLaDirectionPoint(e, Direction.bas).distance(map.get(pm))) && !(regarderDansLaDirection(e, d) instanceof Fantome) && !(regarderDansLaDirection(e, d) instanceof Mur)) meilleurDirection = d;
+        }
+        return meilleurDirection;
+    }
 
     
     /** Si le délacement de l'entité est autorisé (pas de mur ou autre entité), il est réalisé
@@ -180,9 +203,16 @@ public class Jeu extends Observable implements Runnable {
         else if (contenuDansGrille(pCible)){
             if (e instanceof Fantome){
                 Fantome f = (Fantome)e;
+                if (pCourant.x == 8 && pCourant.y == 9){
+                    f.setSorti(true);
+                    grilleEntites[8][9] = f;
+                }else if (pCourant.x == 11 && pCourant.y == 9){
+                    f.setSorti(true);
+                    grilleEntites[11][9] = f;
+                }
                 if (pCourant.x == 8 && pCourant.y == 10 && objetALaPosition(new Point(8,9)) == null) {
                     if(!f.getMort() && grilleEntites[8][10].d == Direction.haut){
-                        deplacerEntite(pCourant, new Point(8, 9), e);
+                        deplacerEntite(pCourant, new Point(8, 9), e);     
                     }else grilleEntites[8][10].d = Direction.haut;
                 }
                 else if (pCourant.x == 11 && pCourant.y == 10 && objetALaPosition(new Point(11,9)) == null) {
@@ -192,7 +222,6 @@ public class Jeu extends Observable implements Runnable {
                 }
                 else if ((pCourant.x == 8 && pCourant.y == 8 && e.d == Direction.bas) || (pCourant.x == 11 && pCourant.y == 8 && e.d == Direction.bas) || objetALaPosition(pCible) != null) grilleEntites[pCourant.x][pCourant.y].choixDirection();
                 else if(!f.getMort()) deplacerEntite(pCourant, pCible, e);
-
             }
             else if (e instanceof Pacman){
                 if (!(pCourant.x == 8 && pCourant.y == 8 && e.d == Direction.bas) && !(pCourant.x == 11 && pCourant.y == 8 && e.d == Direction.bas) && objetALaPosition(pCible) == null) deplacerEntite(pCourant, pCible, e);
