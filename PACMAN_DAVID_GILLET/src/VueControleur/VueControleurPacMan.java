@@ -153,13 +153,13 @@ public class VueControleurPacMan extends JFrame implements Observer {
 
         sizeX = _sizeX;
         sizeY = _sizeY;
-        
-
         chargerLesIcones();
         placerLesComposantsGraphiques();
         initialisationMusique();
         ajouterEcouteurClavier();
+        
     }
+    
 
     private void ajouterEcouteurClavier() {
 
@@ -190,6 +190,18 @@ public class VueControleurPacMan extends JFrame implements Observer {
 
         });
 
+    }
+    
+    public int choisirMap(){
+        int numMap = 0;
+        String[] choices = { "Classique (EASY)", "Head (HARD)"};
+        String input = (String) JOptionPane.showInputDialog(null, "Choisissez le niveau voulu...",
+        "Choix du niveau", JOptionPane.QUESTION_MESSAGE, null,                                                        // icon
+        choices, // Array of choices
+        choices[0]); // Initial choice
+        if (input == "Classique (EASY)") numMap = 1;
+        else numMap = 2;
+        return numMap;
     }
 
     public void setJeu(Jeu _jeu) {
