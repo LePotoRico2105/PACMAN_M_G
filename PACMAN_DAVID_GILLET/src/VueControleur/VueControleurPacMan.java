@@ -200,13 +200,22 @@ public class VueControleurPacMan extends JFrame implements Observer {
         clipIntro.setFramePosition(0);
         clipIntro.start();
         int numMap = 0;
-        String[] choices = { "Classique (EASY)", "Head (HARD)"};
+        String[] choices = {"Classique (EASY)", "Head (HARD)"};
         String input = (String) JOptionPane.showInputDialog(null, "Choisissez le niveau voulu...",
-        "Choix du niveau", JOptionPane.QUESTION_MESSAGE, null,                                                        // icon
-        choices, // Array of choices
+        "Choix du niveau", JOptionPane.QUESTION_MESSAGE, null, choices, // Array of choices
         choices[0]); // Initial choice
-        if ("Classique (EASY)".equals(input)) numMap = 1;
-        else numMap = 2;
+        if (null == input) numMap = 1;
+        else switch (input) {
+            case "Classique (EASY)":
+                numMap = 1;
+                break;
+            case "Head (HARD)":
+                numMap = 2;
+                break;
+            default:
+                numMap = 1;
+                break;
+        }
         return numMap;
     }
 
