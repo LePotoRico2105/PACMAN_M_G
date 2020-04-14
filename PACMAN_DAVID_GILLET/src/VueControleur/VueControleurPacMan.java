@@ -16,7 +16,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
@@ -199,7 +198,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         "Choix du niveau", JOptionPane.QUESTION_MESSAGE, null,                                                        // icon
         choices, // Array of choices
         choices[0]); // Initial choice
-        if (input == "Classique (EASY)") numMap = 1;
+        if ("Classique (EASY)".equals(input)) numMap = 1;
         else numMap = 2;
         return numMap;
     }
