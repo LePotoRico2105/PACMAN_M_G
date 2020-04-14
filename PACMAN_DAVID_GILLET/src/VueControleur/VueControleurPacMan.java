@@ -110,11 +110,15 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private AudioInputStream audioMangerFantome;
     private AudioInputStream audioPacmanMort;
     private AudioInputStream audioSuperPacman;
+    private AudioInputStream audioIntro;
+    private AudioInputStream audioGameOver;
     private Clip clipMusiqueFond;
     private Clip clipSuperPacman;
     private Clip clipPacmanMort;        
     private Clip clipMangerPastille;
     private Clip clipMangerFantome;
+    private Clip clipIntro;
+    private Clip clipGameOver;
     private FloatControl clipMusiqueFond_volume;
     private FloatControl clipPacmanMort_volume;
     private FloatControl clipMangerFantome_volume;
@@ -192,6 +196,9 @@ public class VueControleurPacMan extends JFrame implements Observer {
     }
     
     public int choisirMap(){
+        clipMusiqueFond.stop();
+        clipIntro.setFramePosition(0);
+        clipIntro.start();
         int numMap = 0;
         String[] choices = { "Classique (EASY)", "Head (HARD)"};
         String input = (String) JOptionPane.showInputDialog(null, "Choisissez le niveau voulu...",
@@ -268,23 +275,31 @@ public class VueControleurPacMan extends JFrame implements Observer {
     }
     private void initialisationMusique(){
         try {
+            audioGameOver = AudioSystem.getAudioInputStream(new File("Sounds/gameOver.wav").getAbsoluteFile());
+            audioIntro = AudioSystem.getAudioInputStream(new File("Sounds/intro.wav").getAbsoluteFile());
             audioMusiqueFond = AudioSystem.getAudioInputStream(new File("Sounds/musiqueFond.wav").getAbsoluteFile());
             audioMangerPastille = AudioSystem.getAudioInputStream(new File("Sounds/mangerPastille.wav").getAbsoluteFile());
             audioMangerFantome = AudioSystem.getAudioInputStream(new File("Sounds/mangerFantome.wav").getAbsoluteFile());
             audioPacmanMort = AudioSystem.getAudioInputStream(new File("Sounds/pacmanMort.wav").getAbsoluteFile());
             audioSuperPacman = AudioSystem.getAudioInputStream(new File("Sounds/superPacman.wav").getAbsoluteFile());
             clipMusiqueFond = AudioSystem.getClip();
+            clipGameOver = AudioSystem.getClip();
             clipSuperPacman = AudioSystem.getClip();
             clipPacmanMort = AudioSystem.getClip();
             clipMangerPastille = AudioSystem.getClip();
             clipMangerFantome = AudioSystem.getClip();
+            clipIntro = AudioSystem.getClip();
             clipMusiqueFond.open(audioMusiqueFond);
+            clipIntro.open(audioIntro);
+            clipGameOver.open(audioGameOver);
             clipSuperPacman.open(audioSuperPacman);
             clipPacmanMort.open(audioPacmanMort);
             clipMangerPastille.open(audioMangerPastille);
             clipMangerFantome.open(audioMangerFantome);
-            clipMusiqueFond.loop(Clip.LOOP_CONTINUOUSLY);
-            clipMusiqueFond.start();
+            clipIntro.loop(Clip.LOOP_CONTINUOUSLY);
+            clipIntro.start();
+            clipMusiqueFond.stop();
+            clipGameOver.stop();
             clipSuperPacman.stop();
             clipPacmanMort.stop();
             clipMangerPastille.stop();
@@ -448,16 +463,76 @@ public class VueControleurPacMan extends JFrame implements Observer {
                             }    
                             else switch (f.getColor()) {
                                 case "bleu":
-                                    tabJLabel[x][y].setIcon(icoBleuH);
+                                    switch (jeu.getGrille()[x][y].getDirection()){
+                                        case haut: 
+                                            tabJLabel[x][y].setIcon(icoBleuH);
+                                            break;
+                                        case bas: 
+                                                tabJLabel[x][y].setIcon(icoBleuB);
+                                                break;
+                                        case gauche: 
+                                                tabJLabel[x][y].setIcon(icoBleuG);
+                                                break;
+                                        case droite: 
+                                                tabJLabel[x][y].setIcon(icoBleuD);
+                                                break;
+                                        default:
+                                            break;
+                                    }
                                     break;
                                 case "rose":
-                                    tabJLabel[x][y].setIcon(icoRoseH);
+                                    switch (jeu.getGrille()[x][y].getDirection()){
+                                        case haut: 
+                                            tabJLabel[x][y].setIcon(icoRoseH);
+                                            break;
+                                        case bas: 
+                                                tabJLabel[x][y].setIcon(icoRoseB);
+                                                break;
+                                        case gauche: 
+                                                tabJLabel[x][y].setIcon(icoRoseG);
+                                                break;
+                                        case droite: 
+                                                tabJLabel[x][y].setIcon(icoRoseD);
+                                                break;
+                                        default:
+                                            break;
+                                    }
                                     break;
                                 case "rouge":
-                                    tabJLabel[x][y].setIcon(icoRougeH);
+                                    switch (jeu.getGrille()[x][y].getDirection()){
+                                        case haut: 
+                                            tabJLabel[x][y].setIcon(icoRougeH);
+                                            break;
+                                        case bas: 
+                                                tabJLabel[x][y].setIcon(icoRougeB);
+                                                break;
+                                        case gauche: 
+                                                tabJLabel[x][y].setIcon(icoRougeG);
+                                                break;
+                                        case droite: 
+                                                tabJLabel[x][y].setIcon(icoRougeD);
+                                                break;
+                                        default:
+                                            break;
+                                    }
                                     break;
                                 case "orange":
-                                    tabJLabel[x][y].setIcon(icoOrangeH);
+                                    switch (jeu.getGrille()[x][y].getDirection()){
+                                        case haut: 
+                                            tabJLabel[x][y].setIcon(icoOrangeH);
+                                            break;
+                                        case bas: 
+                                            tabJLabel[x][y].setIcon(icoOrangeB);
+                                            break;
+                                        case gauche: 
+                                            tabJLabel[x][y].setIcon(icoOrangeG);
+                                            break;
+                                        case droite: 
+                                            tabJLabel[x][y].setIcon(icoOrangeD );
+                                            break;
+                                        default:
+                                            break;
+                                    }
                                     break;
                                 default:
                                     break;
@@ -475,6 +550,11 @@ public class VueControleurPacMan extends JFrame implements Observer {
     }
     
     public void mettreAJourSonJeu(){
+        if(!jeu.getPacman().getMort() && jeu.getPacman().getBooste() == false){
+            if(clipIntro.isActive())clipIntro.stop();
+            clipMusiqueFond.start();
+            clipMusiqueFond.loop(Clip.LOOP_CONTINUOUSLY);
+        } 
         if (jeu.getPacman().getMort()){
             jeu.getPacman().setNbVies(jeu.getPacman().getNbVies()-1);
             if(clipMangerPastille.isActive())clipMangerPastille.stop();
@@ -528,6 +608,10 @@ public class VueControleurPacMan extends JFrame implements Observer {
             jeu.getGrillePastilles()[px][py].mangerPastille();
         }
         if(jeu.getPacman().getNbVies() == 0){
+            clipPacmanMort.stop();
+            
+            clipMusiqueFond.stop();
+            clipGameOver.start();
             JOptionPane.showMessageDialog(null, "Pacman est mort ! Votre score est de : " + score + " points", "GAME OVER", JOptionPane.WARNING_MESSAGE);
             System.exit(0);
         } 
