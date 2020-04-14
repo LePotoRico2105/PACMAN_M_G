@@ -391,9 +391,10 @@ public class Jeu extends Observable implements Runnable {
     @Override
     public void run() {
         while (true) {
-            for (Entite e : map.keySet()) { // déclenchement de l'activité des entités, map.keySet() correspond à la liste des entités
-                e.run(); 
-            }
+            map.keySet().forEach((e) -> {
+                // déclenchement de l'activité des entités, map.keySet() correspond à la liste des entités
+                e.run();
+            });
             setChanged();
             notifyObservers(); // notification de l'observer pour le raffraichisssement graphique
             try {
