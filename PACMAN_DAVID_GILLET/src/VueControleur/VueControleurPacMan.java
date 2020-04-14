@@ -541,23 +541,25 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 if (jeu.getGrille()[x][y] instanceof Fantome){
                     Fantome f = (Fantome)jeu.getGrille()[x][y];
                     if (f.getMort()){
-                        if (f.getSpawntime() == 0){
-                            jeu.replacerFantome((Fantome)jeu.getGrille()[x][y]);
-                            f.setSpawntime(f.getSpawntime()+1);
-                            clipMangerFantome.setFramePosition(0);
-                            clipMangerFantome.start();
-                            score = score + 200;
-                        }
-                        else if (f.getSpawntime() == 5){
-                            f.setSpawntime(0);
-                            f.setSorti(false);
-                            f.setMort(false);
-                            f.setEatable(false);
-                            jeu.getGrille()[x][y] = f;
-                        }
-                        else{
-                            f.setSpawntime(f.getSpawntime()+1);
-                            jeu.getGrille()[x][y] = f; 
+                        switch (f.getSpawntime()) {
+                            case 0:
+                                jeu.replacerFantome((Fantome)jeu.getGrille()[x][y]);
+                                f.setSpawntime(f.getSpawntime()+1);
+                                clipMangerFantome.setFramePosition(0);
+                                clipMangerFantome.start();
+                                score = score + 200;
+                                break;
+                            case 5:
+                                f.setSpawntime(0);
+                                f.setSorti(false);
+                                f.setMort(false);
+                                f.setEatable(false);
+                                jeu.getGrille()[x][y] = f;
+                                break;
+                            default:
+                                f.setSpawntime(f.getSpawntime()+1); 
+                                jeu.getGrille()[x][y] = f;
+                                break;
                         }
                     }
                 }
