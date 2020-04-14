@@ -219,7 +219,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         icoPacman22 = chargerIcone("Images/pacman2.png", 90.0);
         icoPacman23 = chargerIcone("Images/pacman2.png", 180.0);
         icoPacman24 = chargerIcone("Images/pacman2.png", 270.0); 
-        icoBleuH = chargerIcone("Images/bleuB.png", 0.0);
+        icoBleuH = chargerIcone("Images/bleuH.png", 0.0);
         icoBleuD = chargerIcone("Images/bleuD.png", 0.0);
         icoBleuB = chargerIcone("Images/bleuB.png", 0.0);
         icoBleuG = chargerIcone("Images/bleuG.png", 0.0);
@@ -319,33 +319,6 @@ public class VueControleurPacMan extends JFrame implements Observer {
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
-        
-        /*
-        // Fenêtre de la page d'accueil
-        JFrame fenetreTitre = new JFrame();
-        fenetreTitre.setTitle("PacMan");
-        fenetreTitre.setSize(sizeX*40, sizeY*40);
-        fenetreTitre.setLocationRelativeTo(null);
-        fenetreTitre.setResizable(false);
-        fenetreTitre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
-        fenetreTitre.setBackground(color);
-        
-        // Fenêtre des règles du jeu
-        JFrame fenetreRegle = new JFrame();
-        fenetreRegle.setTitle("PacMan");
-        fenetreRegle.setSize(sizeX*40, sizeY*40);
-        fenetreRegle.setLocationRelativeTo(null);
-        fenetreRegle.setResizable(false);
-        fenetreRegle.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
-        
-        // Fenêtre du jeu
-        JFrame Fjeu = new JFrame();
-        Fjeu.setTitle("PacMan");
-        Fjeu.setSize(sizeX*40, sizeY*40);
-        Fjeu.setLocationRelativeTo(null);
-        Fjeu.setResizable(false);
-        Fjeu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
-        */
         
         JComponent grilleJLabels = new JPanel(new GridLayout(sizeX, sizeY)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
         grilleJLabels.setBackground(color);
@@ -476,16 +449,16 @@ public class VueControleurPacMan extends JFrame implements Observer {
                             }    
                             else switch (f.getColor()) {
                                 case "bleu":
-                                    tabJLabel[x][y].setIcon(icoBleuB);
+                                    tabJLabel[x][y].setIcon(icoBleuH);
                                     break;
                                 case "rose":
-                                    tabJLabel[x][y].setIcon(icoRoseB);
+                                    tabJLabel[x][y].setIcon(icoRoseH);
                                     break;
                                 case "rouge":
-                                    tabJLabel[x][y].setIcon(icoRougeB);
+                                    tabJLabel[x][y].setIcon(icoRougeH);
                                     break;
                                 case "orange":
-                                    tabJLabel[x][y].setIcon(icoOrangeB);
+                                    tabJLabel[x][y].setIcon(icoOrangeH);
                                     break;
                                 default:
                                     break;

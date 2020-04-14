@@ -109,10 +109,22 @@ public class Jeu extends Observable implements Runnable {
     }
     
     public void replacerFantome(Fantome f){
-        if (f.getColor() == "bleu") deplacerEntite(map.get((Entite)f),new Point(8,10), (Entite)f);
-        else if (f.getColor() == "rose") deplacerEntite(map.get((Entite)f),new Point(9,10), (Entite)f);
-        else if (f.getColor() == "rouge") deplacerEntite(map.get((Entite)f),new Point(10,10), (Entite)f);
-        else if (f.getColor() == "orange") deplacerEntite(map.get((Entite)f),new Point(11,10), (Entite)f);
+        if (null != f.getColor()) switch (f.getColor()) {
+            case "bleu":
+                deplacerEntite(map.get((Entite)f),new Point(8,10), (Entite)f);
+                break;
+            case "rose":
+                deplacerEntite(map.get((Entite)f),new Point(9,10), (Entite)f);
+                break;
+            case "rouge":
+                deplacerEntite(map.get((Entite)f),new Point(10,10), (Entite)f);
+                break;
+            case "orange":
+                deplacerEntite(map.get((Entite)f),new Point(11,10), (Entite)f);
+                break;
+            default:
+                break;
+        }
     }
     
     private void initialisationDesEntites() {
