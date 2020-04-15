@@ -187,6 +187,12 @@ public class VueControleurPacMan extends JFrame implements Observer {
 
     }
     
+    // Fonction afin de palier au tabulation \t qui ne fonctionne pas dans les setTitle()
+    public String AffichageBlancTitre(){
+        String blanc = "                                                                                   "; 
+        return blanc;
+    }
+    
     public int choisirMap(){
         clipMusiqueFond.stop();
         clipIntro.setFramePosition(0);
@@ -211,7 +217,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         setTitle("PacMan SCORE : 0");
         return numMap;
     }
-
+    
     public void setJeu(Jeu _jeu) {
         jeu = _jeu;
     }
@@ -559,7 +565,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         } 
         if (jeu.getPacman().getMort()){
             jeu.getPacman().setNbVies(jeu.getPacman().getNbVies()-1);
-            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
+            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() +"PacMan");
             if(clipMangerPastille.isActive())clipMangerPastille.stop();
             if(clipMusiqueFond.isActive())clipMusiqueFond.stop();
             clipPacmanMort.setFramePosition(0);
@@ -587,7 +593,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         if (jeu.getGrillePastilles()[px][py] != null){
            if ("grande".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
             score = score + 50;
-            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
+            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() + "PacMan");
             jeu.getPacman().setBooste(true);
             for (int x = 0; x < sizeX; x++) {
                 for (int y = 0; y < sizeY; y++) {
@@ -606,7 +612,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             }
             else if ("petite".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
                 score = score + 10;
-                setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
+                setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() +"PacMan");
                 if(!jeu.getPacman().getBooste()){
                     clipMangerPastille.setFramePosition(0);
                     clipMangerPastille.start();
@@ -615,7 +621,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             } 
         }     
         if(jeu.getPacman().getNbVies() == 0){
-            setTitle("Plus de crédit... || SCORE : " + score);
+            setTitle("Plus de crédit... || SCORE : " + score + AffichageBlancTitre() + "PacMan");
             clipPacmanMort.stop();
             clipMusiqueFond.stop();
             clipGameOver.start();
@@ -638,7 +644,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                                 clipMangerFantome.setFramePosition(0);
                                 clipMangerFantome.start();
                                 score = score + 200;
-                                setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
+                                setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() +"PacMan");
                                 break;
                             case 5:
                                 f.setSpawntime(0);
