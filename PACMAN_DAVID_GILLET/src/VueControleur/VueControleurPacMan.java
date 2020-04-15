@@ -205,7 +205,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         String input = (String) JOptionPane.showInputDialog(null, "Choisissez le niveau voulu...",
         "Choix du niveau", JOptionPane.QUESTION_MESSAGE, null, choices, // Array of choices
         choices[0]); // Initial choice
-        if (null == input) numMap = 1;
+        if (null == input) System.exit(0);
         else switch (input) {
             case "Classique (EASY)":
                 numMap = 1;
@@ -214,7 +214,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 numMap = 2;
                 break;
             default:
-                numMap = 1;
+                System.exit(0);
                 break;
         }
         setTitle("PacMan SCORE : 0");
@@ -668,6 +668,8 @@ public class VueControleurPacMan extends JFrame implements Observer {
             }
         }
         if(finJeu){
+            score = score + 1000;
+            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() +"PacMan");
             clipMusiqueFond.stop();
             clipSuperPacman.stop();
             clipPacmanMort.stop();        
