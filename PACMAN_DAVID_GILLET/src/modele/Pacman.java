@@ -55,6 +55,7 @@ public class Pacman extends Entite {
         this.booste = _booste;
     }
     
+    @Override
     public Direction getDirection() {
         return d;
     }

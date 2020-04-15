@@ -2,7 +2,6 @@
 import VueControleur.VueControleurPacMan;
 import java.io.IOException;
 import modele.Jeu;
-import modele.Pacman;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
