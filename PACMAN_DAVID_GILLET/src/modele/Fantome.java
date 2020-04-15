@@ -5,7 +5,6 @@
  */
 package modele;
 
-import java.awt.Point;
 import java.util.Random;
 
 /**
@@ -69,7 +68,7 @@ public class Fantome extends Entite {
     @Override
     public void choixDirection() {  
         // développer une stratégie plus détaillée (utiliser regarderDansLaDirection(Entité, Direction) , ajouter murs, etc.)
-        if (getColor() == "rouge" && getEatable() == false && sorti == true && !(jeu.regarderDansLaDirection(this, d) instanceof Fantome)){
+        if ("rouge".equals(getColor()) && getEatable() == false && sorti == true && !(jeu.regarderDansLaDirection(this, d) instanceof Fantome)){
             Direction[] chemin = jeu.cheminVersPacman(this);
             /*for (int i = 0; i < chemin.length; i++)System.out.print(chemin[i] + " - ");
             System.out.println("\n");*/
