@@ -109,10 +109,10 @@ public class Jeu extends Observable implements Runnable {
     }
     
     public void replacerFantome(Fantome f){
-        if (f.getColor() == "bleu") deplacerEntite(map.get((Entite)f),new Point(8,10), (Entite)f);
-        else if (f.getColor() == "rose") deplacerEntite(map.get((Entite)f),new Point(9,10), (Entite)f);
-        else if (f.getColor() == "rouge") deplacerEntite(map.get((Entite)f),new Point(10,10), (Entite)f);
-        else if (f.getColor() == "orange") deplacerEntite(map.get((Entite)f),new Point(11,10), (Entite)f);
+        if (grilleEntites[8][10] == null)deplacerEntite(map.get((Entite)f),new Point(8,10), (Entite)f);
+        else if (grilleEntites[9][10] == null) deplacerEntite(map.get((Entite)f),new Point(9,10), (Entite)f);
+        else if (grilleEntites[10][10] == null) deplacerEntite(map.get((Entite)f),new Point(10,10), (Entite)f);
+        else if (grilleEntites[11][10] == null) deplacerEntite(map.get((Entite)f),new Point(11,10), (Entite)f);
     }
     
     private void initialisationDesEntites() {
@@ -145,33 +145,146 @@ public class Jeu extends Observable implements Runnable {
         Point positionEntite = map.get(e);
         return objetALaPosition(calculerPointCible(positionEntite, d));
     }
+    public Object regarderDansLaDirection(Point p, Direction d) {
+        return objetALaPosition(calculerPointCible(p, d));
+    }
     
     public Point regarderDansLaDirectionPoint(Entite e, Direction d) {
         Point positionEntite = map.get(e);
         return calculerPointCible(positionEntite, d);
     }
     
-    public Direction directionVersPacman(Entite e){
-        Direction d = null;
-        Direction meilleurDirection = null;
-        for (int i = 0; i< 4; i++){
-            switch (i) {
-                case 0:
-                    d = Direction.gauche;
-                    break;
-                case 1:
-                    d = Direction.haut;
-                    break;
-                case 2:
-                    d = Direction.droite;
-                    break;
-                default:
-                    d = Direction.bas;
-                    break;
-            }
-            if (meilleurDirection == null)if ((regarderDansLaDirectionPoint(e, d).distance(map.get(pm)) <  regarderDansLaDirectionPoint(e, Direction.bas).distance(map.get(pm))) && !(regarderDansLaDirection(e, d) instanceof Fantome) && !(regarderDansLaDirection(e, d) instanceof Mur)) meilleurDirection = d;
+    public Point regarderDansLaDirectionPoint(Point p, Direction d) {
+        return calculerPointCible(p, d);
+    }
+    
+    public Direction[] cheminVersPacman(Fantome f){
+        Direction[][] chemin = new Direction[SIZE_X*SIZE_Y][SIZE_X*SIZE_Y];
+        int nChemin = 0;
+        int n = 0;
+        int n2 = 0;
+        int m = 0;
+        Point p = map.get(f);
+        if (regarderDansLaDirection(p, Direction.gauche) instanceof Pacman) {
+            chemin[0][0] = Direction.gauche;
+            nChemin = 0;
         }
-        return meilleurDirection;
+        else if (regarderDansLaDirection(p, Direction.haut) instanceof Pacman) {
+            chemin[0][0] = Direction.haut;
+            nChemin = 0;
+        }
+        else if (regarderDansLaDirection(p, Direction.droite) instanceof Pacman) {
+            chemin[0][0] = Direction.droite;
+            nChemin = 0;
+        }
+        else if (regarderDansLaDirection(p, Direction.bas) instanceof Pacman) {
+            chemin[0][0] = Direction.bas;
+            nChemin = 0;
+        }
+        else {
+            Direction[] lesDirections;
+            int nDirections = 0;
+            if(!(regarderDansLaDirection(p, Direction.gauche) instanceof Mur)) nDirections++;
+            if(!(regarderDansLaDirection(p, Direction.haut) instanceof Mur)) nDirections++;
+            if(!(regarderDansLaDirection(p, Direction.droite) instanceof Mur)) nDirections++;
+            if(!(regarderDansLaDirection(p, Direction.bas) instanceof Mur) && !(p.x == 11 && p.y == 8) && !(p.x == 8 && p.y == 8)) nDirections++;
+            lesDirections = new Direction[nDirections];
+            int indexDirection = 0;
+            if(!(regarderDansLaDirection(p, Direction.gauche) instanceof Mur)) {
+                lesDirections[indexDirection] = Direction.gauche;
+                indexDirection++;
+            }
+            if(!(regarderDansLaDirection(p, Direction.haut) instanceof Mur)) {
+                lesDirections[indexDirection] = Direction.haut;
+                indexDirection++;
+            }
+            if(!(regarderDansLaDirection(p, Direction.droite) instanceof Mur)) {
+                lesDirections[indexDirection] = Direction.droite;
+                indexDirection++;
+            }
+            if(!(regarderDansLaDirection(p, Direction.bas) instanceof Mur) && !(p.x == 11 && p.y == 8) && !(p.x == 8 && p.y == 8)) {
+                lesDirections[indexDirection] = Direction.bas;
+                indexDirection++;
+            }               
+            for (Direction d : lesDirections){
+                chemin[n2][m] = d;
+                n2++;
+            }
+            n = n2;   
+            m++;
+            while (nChemin == 0){
+                for (int i = 0; i < n; i++){
+                    p = map.get(f);     
+                    for (int j = 0; j < m; j++){
+                        try{
+                        p = calculerPointCible(p, chemin[i][j]);
+                        }catch (Exception e){
+                        }
+                    } 
+                    if (regarderDansLaDirection(p, Direction.gauche) instanceof Pacman) {
+                        chemin[i][m] = Direction.gauche;
+                        nChemin = i;
+                        i = n;
+                    }
+                    else if (regarderDansLaDirection(p, Direction.haut) instanceof Pacman) {
+                        chemin[i][m] = Direction.haut;
+                        nChemin = i;
+                        i = n;
+                    }
+                    else if (regarderDansLaDirection(p, Direction.droite) instanceof Pacman) {
+                        chemin[i][m] = Direction.droite;
+                        nChemin = i;
+                        i = n;
+                    }
+                    else if (regarderDansLaDirection(p, Direction.bas) instanceof Pacman) {
+                        chemin[i][m] = Direction.bas;
+                        nChemin = i;
+                        i = n;
+                    }
+                    else {
+                        nDirections = 0;
+                        if(!(regarderDansLaDirection(p, Direction.gauche) instanceof Mur) && chemin[i][m-1] != Direction.droite) nDirections++;
+                        if(!(regarderDansLaDirection(p, Direction.haut) instanceof Mur) && chemin[i][m-1] != Direction.bas) nDirections++;
+                        if(!(regarderDansLaDirection(p, Direction.droite) instanceof Mur) && chemin[i][m-1] != Direction.gauche) nDirections++;
+                        if(!(regarderDansLaDirection(p, Direction.bas) instanceof Mur) && chemin[i][m-1] != Direction.haut && !(p.x == 11 && p.y == 8) && !(p.x == 8 && p.y == 8)) nDirections++;
+                        lesDirections = new Direction[nDirections];
+                        indexDirection = 0;
+                        if(!(regarderDansLaDirection(p, Direction.gauche) instanceof Mur) && chemin[i][m-1] != Direction.droite) {
+                            lesDirections[indexDirection] = Direction.gauche;
+                            indexDirection++;
+                        }
+                        if(!(regarderDansLaDirection(p, Direction.haut) instanceof Mur) && chemin[i][m-1] != Direction.bas) {
+                            lesDirections[indexDirection] = Direction.haut;
+                            indexDirection++;
+                        }
+                        if(!(regarderDansLaDirection(p, Direction.droite) instanceof Mur) && chemin[i][m-1] != Direction.gauche) {
+                            lesDirections[indexDirection] = Direction.droite;
+                            indexDirection++;
+                        }
+                        if(!(regarderDansLaDirection(p, Direction.bas) instanceof Mur) && chemin[i][m-1] != Direction.haut && !(p.x == 11 && p.y == 8) && !(p.x == 8 && p.y == 8)) {
+                            lesDirections[indexDirection] = Direction.bas;
+                            indexDirection++;
+                        }               
+                        for (Direction d : lesDirections){
+                            if (chemin[i][m] == null)chemin[i][m] = d;
+                            else {
+                                System.arraycopy(chemin[i], 0, chemin[n2], 0, m);                            
+                                chemin[n2][m] = d; 
+                                n2++;
+                                if (n2 == chemin.length){
+                                    Direction[][] temp = chemin;
+                                    chemin = new Direction[chemin.length*2][SIZE_X*SIZE_Y];
+                                    System.arraycopy(temp, 0, chemin, 0, n2);   
+                                }
+                            }
+                        }         
+                    }
+                }
+                n = n2;
+                m++;
+            }
+        } 
+        return chemin[nChemin];
     }
 
     
@@ -180,9 +293,7 @@ public class Jeu extends Observable implements Runnable {
     public boolean deplacerEntite(Entite e, Direction d) {    
         Point pCourant = map.get(e);
         Point pCible = calculerPointCible(pCourant, d);
-        if (pCible.x == -1 && pCible.y == 10) deplacerEntite(pCourant, new Point(19, 10), e);
-        else if (pCible.x == 20 && pCible.y == 10) deplacerEntite(pCourant, new Point(0, 10), e);
-        else if (e instanceof Pacman && objetALaPosition(pCible) instanceof Fantome) {
+        if (e instanceof Pacman && objetALaPosition(pCible) instanceof Fantome) {
             Fantome f = (Fantome)getGrille()[pCible.x][pCible.y];
             if(!f.getEatable()){
                 if (!f.getMort())getPacman().setMort(true);
@@ -200,7 +311,7 @@ public class Jeu extends Observable implements Runnable {
                 f.setMort(true);
             }
         }
-        else if (contenuDansGrille(pCible)){
+        else{
             if (e instanceof Fantome){
                 Fantome f = (Fantome)e;
                 if (pCourant.x == 8 && pCourant.y == 9){
@@ -228,7 +339,6 @@ public class Jeu extends Observable implements Runnable {
                 else return false;
             }
         }
-        else return false;
         return true;
     }
     
@@ -239,12 +349,16 @@ public class Jeu extends Observable implements Runnable {
     }
     
     private Point calculerPointCible(Point pCourant, Direction d) {
-        Point pCible = null;   
-        switch(d) {
-            case haut: pCible = new Point(pCourant.x, pCourant.y - 1); break;
-            case bas : pCible = new Point(pCourant.x, pCourant.y + 1); break;
-            case gauche : pCible = new Point(pCourant.x - 1, pCourant.y); break;
-            case droite : pCible = new Point(pCourant.x + 1, pCourant.y); break;     
+        Point pCible = null;
+        if (pCourant.x == 0 && pCourant.y == 10 && d == Direction.gauche)pCible = new Point(19, 10);
+        else if (pCourant.x == 19 && pCourant.y == 10 && d == Direction.droite)pCible = new Point(0, 10);
+        else{
+            switch(d) {
+                case haut: pCible = new Point(pCourant.x, pCourant.y - 1); break;
+                case bas : pCible = new Point(pCourant.x, pCourant.y + 1); break;
+                case gauche : pCible = new Point(pCourant.x - 1, pCourant.y); break;
+                case droite : pCible = new Point(pCourant.x + 1, pCourant.y); break;     
+            }
         }
         return pCible;
     }
@@ -258,6 +372,9 @@ public class Jeu extends Observable implements Runnable {
     
     private Object objetALaPosition(Point p) {
         Object retour = null;
+        if (p.x == -1 && p.y == 10)p = new Point(19, 10);
+        else if (p.x == 20 && p.y == 10)p = new Point(0, 10);
+        
         if (contenuDansGrille(p)) {
             if (grilleMurs[p.x][p.y] != null)retour = grilleMurs[p.x][p.y];
             else retour = grilleEntites[p.x][p.y];
@@ -284,10 +401,48 @@ public class Jeu extends Observable implements Runnable {
                     grillePastilles[x][y] = pastille;
                     mapPastilles.put(pastille, new Point(x,y));
                 }else if(grilleMurs[x][y] == null){
-                    if (!(x == 8 && y == 10) && !(x == 11 && y == 10) && !(x == 9 && y == 10) && !(x == 10 && y == 10)){
-                        pastille = new Pastille(this, "petite");
-                        grillePastilles[x][y] = pastille;
-                        mapPastilles.put(pastille, new Point(x,y));
+                    if (numMap == 1){
+                        if (!(x == 8 && y == 10) && 
+                                !(x == 11 && y == 10) && 
+                                !(x == 9 && y == 10) && 
+                                !(x == 10 && y == 10) && 
+                                !(x == 8 && y == 9) && 
+                                !(x == 11 && y == 9) &&
+                                !(x == 5 && y == 10) &&
+                                !(x == 4 && y == 10) && 
+                                !(x == 3 && y == 10) && 
+                                !(x == 2 && y == 10) && 
+                                !(x == 1 && y == 10) && 
+                                !(x == 0 && y == 10) && 
+                                !(x == 14 && y == 10) &&
+                                !(x == 15 && y == 10) && 
+                                !(x == 16 && y == 10) && 
+                                !(x == 17 && y == 10) &&
+                                !(x == 18 && y == 10) &&
+                                !(x == 19 && y == 10)) 
+                        {
+                            pastille = new Pastille(this, "petite");
+                            grillePastilles[x][y] = pastille;
+                            mapPastilles.put(pastille, new Point(x,y));
+                        }
+                    }else if (numMap == 2){
+                        if (!(x == 8 && y == 10) && 
+                                !(x == 11 && y == 10) && 
+                                !(x == 9 && y == 10) && 
+                                !(x == 10 && y == 10) && 
+                                !(x == 8 && y == 9) && 
+                                !(x == 11 && y == 9) &&
+                                !(x == 0 && y == 10) &&
+                                !(x == 1 && y == 10) && 
+                                !(x == 2 && y == 10) && 
+                                !(x == 19 && y == 10) &&
+                                !(x == 18 && y == 10) &&
+                                !(x == 17 && y == 10)) 
+                        {
+                            pastille = new Pastille(this, "petite");
+                            grillePastilles[x][y] = pastille;
+                            mapPastilles.put(pastille, new Point(x,y));
+                        }
                     }
                 }
             }
