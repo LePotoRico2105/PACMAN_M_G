@@ -121,8 +121,10 @@ public class Jeu extends Observable implements Runnable {
     }
     
     private void initialisationDesEntites() {
+        
         //  Initialisation du pacman
-        pm = new Pacman(this);
+        if (pm == null)pm = new Pacman(this);
+        else pm = new Pacman(this, pm.getNbVies());
         grilleEntites[9][15] = pm;
         map.put(pm, new Point(9, 15));
         
