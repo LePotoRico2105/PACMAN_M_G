@@ -566,6 +566,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         } 
         if (jeu.getPacman().getMort()){
             jeu.getPacman().setNbVies(jeu.getPacman().getNbVies()-1);
+            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
             if(clipMangerPastille.isActive())clipMangerPastille.stop();
             if(clipMusiqueFond.isActive())clipMusiqueFond.stop();
             clipPacmanMort.setFramePosition(0);
@@ -593,7 +594,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         if (jeu.getGrillePastilles()[px][py] != null){
            if ("grande".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
             score = score + 50;
-            setTitle("PacMan SCORE : " + score);
+            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
             jeu.getPacman().setBooste(true);
             for (int x = 0; x < sizeX; x++) {
                 for (int y = 0; y < sizeY; y++) {
@@ -612,7 +613,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             }
             else if ("petite".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
                 score = score + 10;
-                setTitle("PacMan SCORE : " + score);
+                setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
                 if(!jeu.getPacman().getBooste()){
                     clipMangerPastille.setFramePosition(0);
                     clipMangerPastille.start();
@@ -621,8 +622,8 @@ public class VueControleurPacMan extends JFrame implements Observer {
             } 
         }     
         if(jeu.getPacman().getNbVies() == 0){
+            setTitle("Plus de crédit... || SCORE : " + score);
             clipPacmanMort.stop();
-            
             clipMusiqueFond.stop();
             clipGameOver.start();
             JOptionPane.showMessageDialog(null, "Pacman est mort ! Votre score est de : " + score + " points", "GAME OVER", JOptionPane.WARNING_MESSAGE);
@@ -644,7 +645,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                                 clipMangerFantome.setFramePosition(0);
                                 clipMangerFantome.start();
                                 score = score + 200;
-                                setTitle("PacMan SCORE : " + score);
+                                setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
                                 break;
                             case 5:
                                 f.setSpawntime(0);
