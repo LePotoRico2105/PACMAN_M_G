@@ -56,6 +56,11 @@ public class Jeu extends Observable implements Runnable {
     public void choixMap(int _numMap){
         numMap = _numMap;
     }
+    
+    public int getMap(){
+        return numMap;
+    }
+    
     public Entite[][] getGrille() {
         return grilleEntites;
     }
