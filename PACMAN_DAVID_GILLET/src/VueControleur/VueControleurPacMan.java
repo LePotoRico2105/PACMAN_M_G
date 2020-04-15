@@ -153,13 +153,16 @@ public class VueControleurPacMan extends JFrame implements Observer {
     }
 
     public VueControleurPacMan(int _sizeX, int _sizeY) {
-
         sizeX = _sizeX;
         sizeY = _sizeY;
+        initialiserVueControleurPacMan();        
+    }
+    
+    public void initialiserVueControleurPacMan(){
         chargerLesIcones();
         placerLesComposantsGraphiques();
         initialisationMusique();
-        ajouterEcouteurClavier();      
+        ajouterEcouteurClavier();
     }
     
 
@@ -558,7 +561,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         
     }
     
-    public void mettreAJourSonJeu(){
+    public void mettreAJourSonJeu() throws IOException{
         if(!jeu.getPacman().getMort() && jeu.getPacman().getBooste() == false){
             if(clipIntro.isActive())clipIntro.stop();
             clipMusiqueFond.start();
@@ -632,6 +635,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             JOptionPane.showMessageDialog(null, "il vous reste : " + jeu.getPacman().getNbVies() + " vies", "VIE PERDUE", JOptionPane.INFORMATION_MESSAGE);
             jeu.replacerEntites();
         }
+        boolean finJeu = true;
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
                 if (jeu.getGrille()[x][y] instanceof Fantome){
@@ -660,6 +664,41 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         }
                     }
                 }
+                if (jeu.getGrillePastilles()[x][y] != null && !jeu.getGrillePastilles()[x][y].getEstMange()) finJeu = false;
+            }
+        }
+        if(finJeu){
+            clipMusiqueFond.stop();
+            clipSuperPacman.stop();
+            clipPacmanMort.stop();        
+            clipMangerPastille.stop();
+            clipMangerFantome.stop();
+            clipIntro.stop();
+            clipGameOver.stop();
+            String[] choices = {"Rejouer", "Changer de map", "Quitter"};
+            String input = (String) JOptionPane.showInputDialog(null, "BRAVO ! Vous avez gagné, votre score est : " + score,
+            "Que voulez-vous faire ?", JOptionPane.QUESTION_MESSAGE, null, choices, // Array of choices
+            choices[0]); // Initial choice
+            if (null == input)System.exit(0);
+            else switch (input) {
+                case "Rejouer":
+                    int numMap = jeu.getMap();
+                    jeu = new Jeu();
+                    initialiserVueControleurPacMan();
+                    jeu.choixMap(numMap);
+                    jeu.initialiserJeu();
+                    jeu.start();
+                    break;
+                case "Changer de map":
+                    jeu = new Jeu();
+                    initialiserVueControleurPacMan();
+                    jeu.choixMap(choisirMap());
+                    jeu.initialiserJeu();
+                    jeu.start();
+                    break;
+                case "Quitter":
+                    System.exit(0);
+                    break;
             }
         }
         jeu.TIME++;
@@ -668,14 +707,18 @@ public class VueControleurPacMan extends JFrame implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         mettreAJourAffichage();
-        mettreAJourSonJeu();
-/*      
-        SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        mettreAJourAffichage();
-                    }
-                });*/ 
+        try {
+            mettreAJourSonJeu();
+            /*
+            SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+            mettreAJourAffichage();
+            }
+            });*/
+        } catch (IOException ex) {
+            Logger.getLogger(VueControleurPacMan.class.getName()).log(Level.SEVERE, null, ex);
+        }
         }
 
 }
