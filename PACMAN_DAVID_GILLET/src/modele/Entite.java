@@ -24,6 +24,10 @@ public abstract class Entite implements Runnable {
         jeu = _jeu;
     }
     
+    public Direction getDirection(){
+        return d;
+    }
+    
     @Override
     public void run() {
         choixDirection();
