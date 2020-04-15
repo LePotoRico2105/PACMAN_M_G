@@ -159,8 +159,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         chargerLesIcones();
         placerLesComposantsGraphiques();
         initialisationMusique();
-        ajouterEcouteurClavier();
-        
+        ajouterEcouteurClavier();      
     }
     
 
@@ -216,6 +215,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 numMap = 1;
                 break;
         }
+        setTitle("PacMan SCORE : 0");
         return numMap;
     }
 
@@ -593,6 +593,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         if (jeu.getGrillePastilles()[px][py] != null){
            if ("grande".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
             score = score + 50;
+            setTitle("PacMan SCORE : " + score);
             jeu.getPacman().setBooste(true);
             for (int x = 0; x < sizeX; x++) {
                 for (int y = 0; y < sizeY; y++) {
@@ -611,6 +612,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             }
             else if ("petite".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
                 score = score + 10;
+                setTitle("PacMan SCORE : " + score);
                 if(!jeu.getPacman().getBooste()){
                     clipMangerPastille.setFramePosition(0);
                     clipMangerPastille.start();
@@ -642,6 +644,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                                 clipMangerFantome.setFramePosition(0);
                                 clipMangerFantome.start();
                                 score = score + 200;
+                                setTitle("PacMan SCORE : " + score);
                                 break;
                             case 5:
                                 f.setSpawntime(0);
