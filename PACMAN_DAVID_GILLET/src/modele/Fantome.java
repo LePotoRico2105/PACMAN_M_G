@@ -69,7 +69,13 @@ public class Fantome extends Entite {
     @Override
     public void choixDirection() {  
         // développer une stratégie plus détaillée (utiliser regarderDansLaDirection(Entité, Direction) , ajouter murs, etc.)
-        if (getColor() == "rouge" && getEatable() == false && jeu.directionVersPacman(this) != null && sorti == true) d = jeu.directionVersPacman(this);
+        if (getColor() == "rouge" && getEatable() == false && sorti == true && !(jeu.regarderDansLaDirection(this, d) instanceof Fantome)){
+            Direction[] chemin = jeu.cheminVersPacman(this);
+            /*for (int i = 0; i < chemin.length; i++)System.out.print(chemin[i] + " - ");
+            System.out.println("\n");*/
+            d = chemin[0];
+            
+        }
         else if (d == null || jeu.regarderDansLaDirection(this, d) instanceof Mur || jeu.regarderDansLaDirection(this, d) instanceof Fantome)
         switch (r.nextInt(4)) {
               case 0:
