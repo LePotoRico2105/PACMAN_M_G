@@ -529,7 +529,8 @@ public class VueControleurPacMan extends JFrame implements Observer {
         }
         int px = jeu.getEmplacementEntite(jeu.getPacman()).x;
         int py = jeu.getEmplacementEntite(jeu.getPacman()).y;
-        if ("grande".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
+        if (jeu.getGrillePastilles()[px][py] != null){
+           if ("grande".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
             score = score + 50;
             jeu.getPacman().setBooste(true);
             for (int x = 0; x < sizeX; x++) {
@@ -546,15 +547,16 @@ public class VueControleurPacMan extends JFrame implements Observer {
             clipSuperPacman.loop(Clip.LOOP_CONTINUOUSLY);
             clipSuperPacman.start();
             jeu.getGrillePastilles()[px][py].mangerPastille();
-        }
-        else if ("petite".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
-            score = score + 10;
-            if(!jeu.getPacman().getBooste()){
-                clipMangerPastille.setFramePosition(0);
-                clipMangerPastille.start();
-            }   
-            jeu.getGrillePastilles()[px][py].mangerPastille();
-        }
+            }
+            else if ("petite".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
+                score = score + 10;
+                if(!jeu.getPacman().getBooste()){
+                    clipMangerPastille.setFramePosition(0);
+                    clipMangerPastille.start();
+                }   
+                jeu.getGrillePastilles()[px][py].mangerPastille();
+            } 
+        }     
         if(jeu.getPacman().getNbVies() == 0){
             JOptionPane.showMessageDialog(null, "Pacman est mort ! Votre score est de : " + score + " points", "GAME OVER", JOptionPane.WARNING_MESSAGE);
             System.exit(0);
