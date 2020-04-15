@@ -190,12 +190,6 @@ public class VueControleurPacMan extends JFrame implements Observer {
 
     }
     
-    // Fonction afin de palier au tabulation \t qui ne fonctionne pas dans les setTitle()
-    public String AffichageBlancTitre(){
-        String blanc = "                                                                                   "; 
-        return blanc;
-    }
-    
     public int choisirMap(){
         clipMusiqueFond.stop();
         clipIntro.setFramePosition(0);
@@ -339,7 +333,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         Color color = new Color(255,255,255,255);   
         
         // Paramètre de la fenêtre de jeu
-        setTitle("PacMan");
+        setTitle("PACMAN");
         setSize(sizeX*40, sizeY*40);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -568,7 +562,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         } 
         if (jeu.getPacman().getMort()){
             jeu.getPacman().setNbVies(jeu.getPacman().getNbVies()-1);
-            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() +"PacMan");
+            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
             if(clipMangerPastille.isActive())clipMangerPastille.stop();
             if(clipMusiqueFond.isActive())clipMusiqueFond.stop();
             clipPacmanMort.setFramePosition(0);
@@ -596,7 +590,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         if (jeu.getGrillePastilles()[px][py] != null){
            if ("grande".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
             score = score + 50;
-            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() + "PacMan");
+            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
             jeu.getPacman().setBooste(true);
             for (int x = 0; x < sizeX; x++) {
                 for (int y = 0; y < sizeY; y++) {
@@ -615,7 +609,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             }
             else if ("petite".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
                 score = score + 10;
-                setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() +"PacMan");
+                setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
                 if(!jeu.getPacman().getBooste()){
                     clipMangerPastille.setFramePosition(0);
                     clipMangerPastille.start();
@@ -624,7 +618,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             } 
         }     
         if(jeu.getPacman().getNbVies() == 0){
-            setTitle("Plus de crédit... || SCORE : " + score + AffichageBlancTitre() + "PacMan");
+            setTitle("Plus de crédit... || SCORE : " + score);
             clipPacmanMort.stop();
             clipMusiqueFond.stop();
             clipGameOver.start();
@@ -648,7 +642,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                                 clipMangerFantome.setFramePosition(0);
                                 clipMangerFantome.start();
                                 score = score + 200;
-                                setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() +"PacMan");
+                                setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
                                 break;
                             case 5:
                                 f.setSpawntime(0);
@@ -669,7 +663,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         }
         if(finJeu){
             score = score + 1000;
-            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() +"PacMan");
+            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
             clipMusiqueFond.stop();
             clipSuperPacman.stop();
             clipPacmanMort.stop();        
