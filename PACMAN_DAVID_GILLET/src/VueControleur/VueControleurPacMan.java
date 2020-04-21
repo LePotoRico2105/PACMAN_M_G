@@ -571,9 +571,9 @@ public class VueControleurPacMan extends JFrame implements Observer {
             setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() +"PacMan");
             if(clipMangerPastille.isActive())clipMangerPastille.stop();
             if(clipMusiqueFond.isActive())clipMusiqueFond.stop();
+            reinitialisationMusique();
             clipPacmanMort.setFramePosition(0);
             clipPacmanMort.start();
-            reinitialisationMusique();
         }
         if(jeu.TIME % 30 == 29) {
             jeu.getPacman().setBooste(false);

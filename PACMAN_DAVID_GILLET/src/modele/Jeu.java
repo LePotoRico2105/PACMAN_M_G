@@ -219,77 +219,74 @@ public class Jeu extends Observable implements Runnable {
             }
             n = n2;   
             m++;
-            while (nChemin == 0){
-                for (int i = 0; i < n; i++){
-                    p = map.get(f);     
-                    for (int j = 0; j < m; j++){
-                        try{
-                        p = calculerPointCible(p, chemin[i][j]);
-                        }catch (Exception e){
-                        }
-                    } 
-                    if (regarderDansLaDirection(p, Direction.gauche) instanceof Pacman) {
-                        chemin[i][m] = Direction.gauche;
-                        nChemin = i;
-                        i = n;
-                    }
-                    else if (regarderDansLaDirection(p, Direction.haut) instanceof Pacman) {
-                        chemin[i][m] = Direction.haut;
-                        nChemin = i;
-                        i = n;
-                    }
-                    else if (regarderDansLaDirection(p, Direction.droite) instanceof Pacman) {
-                        chemin[i][m] = Direction.droite;
-                        nChemin = i;
-                        i = n;
-                    }
-                    else if (regarderDansLaDirection(p, Direction.bas) instanceof Pacman) {
-                        chemin[i][m] = Direction.bas;
-                        nChemin = i;
-                        i = n;
-                    }
-                    else {
-                        nDirections = 0;
-                        if(!(regarderDansLaDirection(p, Direction.gauche) instanceof Mur) && chemin[i][m-1] != Direction.droite) nDirections++;
-                        if(!(regarderDansLaDirection(p, Direction.haut) instanceof Mur) && chemin[i][m-1] != Direction.bas) nDirections++;
-                        if(!(regarderDansLaDirection(p, Direction.droite) instanceof Mur) && chemin[i][m-1] != Direction.gauche) nDirections++;
-                        if(!(regarderDansLaDirection(p, Direction.bas) instanceof Mur) && chemin[i][m-1] != Direction.haut && !(p.x == 11 && p.y == 8) && !(p.x == 8 && p.y == 8)) nDirections++;
-                        lesDirections = new Direction[nDirections];
-                        indexDirection = 0;
-                        if(!(regarderDansLaDirection(p, Direction.gauche) instanceof Mur) && chemin[i][m-1] != Direction.droite) {
-                            lesDirections[indexDirection] = Direction.gauche;
-                            indexDirection++;
-                        }
-                        if(!(regarderDansLaDirection(p, Direction.haut) instanceof Mur) && chemin[i][m-1] != Direction.bas) {
-                            lesDirections[indexDirection] = Direction.haut;
-                            indexDirection++;
-                        }
-                        if(!(regarderDansLaDirection(p, Direction.droite) instanceof Mur) && chemin[i][m-1] != Direction.gauche) {
-                            lesDirections[indexDirection] = Direction.droite;
-                            indexDirection++;
-                        }
-                        if(!(regarderDansLaDirection(p, Direction.bas) instanceof Mur) && chemin[i][m-1] != Direction.haut && !(p.x == 11 && p.y == 8) && !(p.x == 8 && p.y == 8)) {
-                            lesDirections[indexDirection] = Direction.bas;
-                            indexDirection++;
-                        }               
-                        for (Direction d : lesDirections){
-                            if (chemin[i][m] == null)chemin[i][m] = d;
-                            else {
-                                System.arraycopy(chemin[i], 0, chemin[n2], 0, m);                            
-                                chemin[n2][m] = d; 
-                                n2++;
-                                if (n2 == chemin.length){
-                                    Direction[][] temp = chemin;
-                                    chemin = new Direction[chemin.length*2][SIZE_X*SIZE_Y];
-                                    System.arraycopy(temp, 0, chemin, 0, n2);   
-                                }
+            try{
+                while (nChemin == 0){
+                    for (int i = 0; i < n; i++){
+                        p = map.get(f);     
+                        for (int j = 0; j < m; j++){
+                            try{
+                            p = calculerPointCible(p, chemin[i][j]);
+                            }catch (Exception e){
                             }
-                        }         
+                        } 
+                        if (regarderDansLaDirection(p, Direction.gauche) instanceof Pacman) {
+                            chemin[i][m] = Direction.gauche;
+                            nChemin = i;
+                            i = n;
+                        }
+                        else if (regarderDansLaDirection(p, Direction.haut) instanceof Pacman) {
+                            chemin[i][m] = Direction.haut;
+                            nChemin = i;
+                            i = n;
+                        }
+                        else if (regarderDansLaDirection(p, Direction.droite) instanceof Pacman) {
+                            chemin[i][m] = Direction.droite;
+                            nChemin = i;
+                            i = n;
+                        }
+                        else if (regarderDansLaDirection(p, Direction.bas) instanceof Pacman) {
+                            chemin[i][m] = Direction.bas;
+                            nChemin = i;
+                            i = n;
+                        }
+                        else {
+                            nDirections = 0;
+                            if(!(regarderDansLaDirection(p, Direction.gauche) instanceof Mur) && chemin[i][m-1] != Direction.droite) nDirections++;
+                            if(!(regarderDansLaDirection(p, Direction.haut) instanceof Mur) && chemin[i][m-1] != Direction.bas) nDirections++;
+                            if(!(regarderDansLaDirection(p, Direction.droite) instanceof Mur) && chemin[i][m-1] != Direction.gauche) nDirections++;
+                            if(!(regarderDansLaDirection(p, Direction.bas) instanceof Mur) && chemin[i][m-1] != Direction.haut && !(p.x == 11 && p.y == 8) && !(p.x == 8 && p.y == 8)) nDirections++;
+                            lesDirections = new Direction[nDirections];
+                            indexDirection = 0;
+                            if(!(regarderDansLaDirection(p, Direction.gauche) instanceof Mur) && chemin[i][m-1] != Direction.droite) {
+                                lesDirections[indexDirection] = Direction.gauche;
+                                indexDirection++;
+                            }
+                            if(!(regarderDansLaDirection(p, Direction.haut) instanceof Mur) && chemin[i][m-1] != Direction.bas) {
+                                lesDirections[indexDirection] = Direction.haut;
+                                indexDirection++;
+                            }
+                            if(!(regarderDansLaDirection(p, Direction.droite) instanceof Mur) && chemin[i][m-1] != Direction.gauche) {
+                                lesDirections[indexDirection] = Direction.droite;
+                                indexDirection++;
+                            }
+                            if(!(regarderDansLaDirection(p, Direction.bas) instanceof Mur) && chemin[i][m-1] != Direction.haut && !(p.x == 11 && p.y == 8) && !(p.x == 8 && p.y == 8)) {
+                                lesDirections[indexDirection] = Direction.bas;
+                                indexDirection++;
+                            }               
+                            for (Direction d : lesDirections){
+                                if (chemin[i][m] == null)chemin[i][m] = d;
+                                else {
+                                    System.arraycopy(chemin[i], 0, chemin[n2], 0, m);                            
+                                    chemin[n2][m] = d; 
+                                    n2++;
+                                }
+                            }         
+                        }
                     }
+                    n = n2;
+                    m++;
                 }
-                n = n2;
-                m++;
-            }
+            }catch(Exception e){}
         } 
         return chemin[nChemin];
     }

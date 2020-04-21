@@ -13,6 +13,7 @@ public abstract class Entite implements Runnable {
 
     protected Jeu jeu;
     protected Direction d;
+    protected boolean mort;
     
     public abstract void choixDirection(); // stratégie de déclassement définie dans les sous-classes, concernant Pacman, ce sont les évènements clavier qui définissent la direction
     
@@ -22,10 +23,21 @@ public abstract class Entite implements Runnable {
     
     public Entite(Jeu _jeu) {
         jeu = _jeu;
+        mort = false;
     }
     
     public Direction getDirection(){
         return d;
+    }
+    
+    public boolean getMort()
+    {
+        return mort;
+    }
+    
+    public void setMort(boolean _mort)
+    {
+        mort = _mort;
     }
     
     @Override

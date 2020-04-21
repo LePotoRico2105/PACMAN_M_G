@@ -6,7 +6,6 @@ package modele;
 public class Pacman extends Entite {
 
     private int nbVies;
-    private boolean mort;
     private boolean booste;
     
     public Pacman(Jeu _jeu, int _nbVies) {
@@ -33,21 +32,11 @@ public class Pacman extends Entite {
     public void setNbVies(int _nbVies)
     {
         this.nbVies = _nbVies;
-    }
-    
-    public boolean getMort()
-    {
-        return mort;
-    }
+    } 
     
     public boolean getBooste()
     {
         return booste;
-    }
-    
-    public void setMort(boolean _mort)
-    {
-        this.mort = _mort;
     }
     
     public void setBooste(boolean _booste)
