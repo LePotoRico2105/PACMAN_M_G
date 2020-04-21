@@ -53,6 +53,7 @@ public class Jeu extends Observable implements Runnable {
         initialisationDesPastilles();
         initialisationDesEntites();
     }
+    
     public void choixMap(int _numMap){
         numMap = _numMap;
     }

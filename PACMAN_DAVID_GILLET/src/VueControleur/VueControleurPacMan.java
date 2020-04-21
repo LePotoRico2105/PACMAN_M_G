@@ -1,6 +1,5 @@
 package VueControleur;
 
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -18,7 +17,6 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
@@ -112,11 +110,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private Clip clipMangerFantome;
     private Clip clipIntro;
     private Clip clipGameOver;
-    private FloatControl clipMusiqueFond_volume;
-    private FloatControl clipPacmanMort_volume;
-    private FloatControl clipMangerFantome_volume;
-    private FloatControl clipMangerPastille_volume;
-    private FloatControl clipSuperPacman_volume;
+
     
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associé à une icône, suivant ce qui est présent dans la partie modèle)
     
@@ -157,14 +151,11 @@ public class VueControleurPacMan extends JFrame implements Observer {
         initialisationMusique();
         ajouterEcouteurClavier();
     }
-    
 
     private void ajouterEcouteurClavier() {
-
         addKeyListener(new KeyAdapter() { // new KeyAdapter() { ... } est une instance de classe anonyme, il s'agit d'un objet qui correspond au controleur dans MVC
             @Override
             public void keyPressed(KeyEvent e) {
-                
                 switch(e.getKeyCode()) {  // on écoute les flèches de direction du clavier
                     case KeyEvent.VK_LEFT : 
                         if (!(jeu.regarderDansLaDirection(jeu.getPacman(), Direction.gauche) instanceof Mur))
@@ -182,18 +173,9 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         if (!(jeu.regarderDansLaDirection(jeu.getPacman(), Direction.haut) instanceof Mur))
                         jeu.getPacman().setDirection(Direction.haut);
                     break;
-                }
-                
+                }      
             }
-
         });
-
-    }
-    
-    // Fonction afin de palier au tabulation \t qui ne fonctionne pas dans les setTitle()
-    public String AffichageBlancTitre(){
-        String blanc = "                                                                                   "; 
-        return blanc;
     }
     
     public int choisirMap(){
@@ -284,6 +266,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         clipMusiqueFond.loop(Clip.LOOP_CONTINUOUSLY);
         clipMusiqueFond.start();
     }
+    
     private void initialisationMusique(){
         try {
             audioGameOver = AudioSystem.getAudioInputStream(new File("Sounds/gameOver.wav").getAbsoluteFile());
@@ -339,7 +322,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         Color color = new Color(255,255,255,255);   
         
         // Paramètre de la fenêtre de jeu
-        setTitle("PacMan");
+        setTitle("PACMAN");
         setSize(sizeX*40, sizeY*40);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -568,7 +551,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         } 
         if (jeu.getPacman().getMort()){
             jeu.getPacman().setNbVies(jeu.getPacman().getNbVies()-1);
-            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() +"PacMan");
+            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
             if(clipMangerPastille.isActive())clipMangerPastille.stop();
             if(clipMusiqueFond.isActive())clipMusiqueFond.stop();
             reinitialisationMusique();
@@ -596,7 +579,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         if (jeu.getGrillePastilles()[px][py] != null){
            if ("grande".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
             score = score + 50;
-            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() + "PacMan");
+            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
             jeu.getPacman().setBooste(true);
             for (int x = 0; x < sizeX; x++) {
                 for (int y = 0; y < sizeY; y++) {
@@ -615,7 +598,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             }
             else if ("petite".equals(jeu.getGrillePastilles()[px][py].getType()) && !jeu.getGrillePastilles()[px][py].getEstMange()){
                 score = score + 10;
-                setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() +"PacMan");
+                setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
                 if(!jeu.getPacman().getBooste()){
                     clipMangerPastille.setFramePosition(0);
                     clipMangerPastille.start();
@@ -624,7 +607,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             } 
         }     
         if(jeu.getPacman().getNbVies() == 0){
-            setTitle("Plus de crédit... || SCORE : " + score + AffichageBlancTitre() + "PacMan");
+            setTitle("Plus de crédit... || SCORE : " + score);
             clipPacmanMort.stop();
             clipMusiqueFond.stop();
             clipGameOver.start();
@@ -648,7 +631,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                                 clipMangerFantome.setFramePosition(0);
                                 clipMangerFantome.start();
                                 score = score + 200;
-                                setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() +"PacMan");
+                                setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
                                 break;
                             case 5:
                                 f.setSpawntime(0);
@@ -669,7 +652,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         }
         if(finJeu){
             score = score + 1000;
-            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score + AffichageBlancTitre() +"PacMan");
+            setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
             clipMusiqueFond.stop();
             clipSuperPacman.stop();
             clipPacmanMort.stop();        
