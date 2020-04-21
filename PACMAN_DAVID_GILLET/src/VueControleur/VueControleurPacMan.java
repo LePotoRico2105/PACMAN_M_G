@@ -103,6 +103,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private AudioInputStream audioSuperPacman;
     private AudioInputStream audioIntro;
     private AudioInputStream audioGameOver;
+    private AudioInputStream audioVictoire;
     private Clip clipMusiqueFond;
     private Clip clipSuperPacman;
     private Clip clipPacmanMort;        
@@ -110,6 +111,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private Clip clipMangerFantome;
     private Clip clipIntro;
     private Clip clipGameOver;
+    private Clip clipVictoire;
 
     
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associé à une icône, suivant ce qui est présent dans la partie modèle)
@@ -263,6 +265,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         if (clipPacmanMort.isActive()) clipPacmanMort.stop();
         if (clipMangerPastille.isActive()) clipMangerPastille.stop();
         if (clipMusiqueFond.isActive()) clipMusiqueFond.stop();
+        if (clipVictoire.isActive()) clipVictoire.stop();
         clipMusiqueFond.loop(Clip.LOOP_CONTINUOUSLY);
         clipMusiqueFond.start();
     }
@@ -276,6 +279,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             audioMangerFantome = AudioSystem.getAudioInputStream(new File("Sounds/mangerFantome.wav").getAbsoluteFile());
             audioPacmanMort = AudioSystem.getAudioInputStream(new File("Sounds/pacmanMort.wav").getAbsoluteFile());
             audioSuperPacman = AudioSystem.getAudioInputStream(new File("Sounds/superPacman.wav").getAbsoluteFile());
+            audioVictoire = AudioSystem.getAudioInputStream(new File("Sounds/victoire.wav").getAbsoluteFile());
             clipMusiqueFond = AudioSystem.getClip();
             clipGameOver = AudioSystem.getClip();
             clipSuperPacman = AudioSystem.getClip();
@@ -283,9 +287,11 @@ public class VueControleurPacMan extends JFrame implements Observer {
             clipMangerPastille = AudioSystem.getClip();
             clipMangerFantome = AudioSystem.getClip();
             clipIntro = AudioSystem.getClip();
+            clipVictoire = AudioSystem.getClip();
             clipMusiqueFond.open(audioMusiqueFond);
             clipIntro.open(audioIntro);
             clipGameOver.open(audioGameOver);
+            clipVictoire.open(audioVictoire);
             clipSuperPacman.open(audioSuperPacman);
             clipPacmanMort.open(audioPacmanMort);
             clipMangerPastille.open(audioMangerPastille);
@@ -293,6 +299,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             clipIntro.loop(Clip.LOOP_CONTINUOUSLY);
             clipIntro.start();
             clipMusiqueFond.stop();
+            clipVictoire.stop();
             clipGameOver.stop();
             clipSuperPacman.stop();
             clipPacmanMort.stop();
@@ -660,6 +667,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             clipMangerFantome.stop();
             clipIntro.stop();
             clipGameOver.stop();
+            clipVictoire.start();
             String[] choices = {"Rejouer", "Changer de map", "Quitter"};
             String input = (String) JOptionPane.showInputDialog(null, "BRAVO ! Vous avez gagné, votre score est : " + score,
             "Que voulez-vous faire ?", JOptionPane.QUESTION_MESSAGE, null, choices, // Array of choices
@@ -669,6 +677,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 case "Rejouer":
                     int numMap = jeu.getMap();
                     jeu = new Jeu();
+                    reinitialisationMusique();
                     initialiserVueControleurPacMan();
                     jeu.choixMap(numMap);
                     jeu.initialiserJeu();
@@ -677,6 +686,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
                 case "Changer de map":
                     jeu = new Jeu();
                     initialiserVueControleurPacMan();
+                    reinitialisationMusique();
                     jeu.choixMap(choisirMap());
                     jeu.initialiserJeu();
                     jeu.start();
