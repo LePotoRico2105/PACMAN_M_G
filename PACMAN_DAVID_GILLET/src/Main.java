@@ -23,6 +23,7 @@ public class Main {
         vc.setJeu(jeu);
         
         vc.setVisible(true);
+        vc.initialiserFichiersTxt();
         jeu.choixMap(vc.choisirMap());
         jeu.initialiserJeu();
         jeu.start();

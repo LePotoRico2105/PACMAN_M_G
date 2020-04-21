@@ -7,7 +7,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
@@ -46,6 +50,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private final int sizeX; // taille de la grille affichée
     private final int sizeY;
     private int score = 0;
+    private int highscore = 0;
 
     private ImageIcon icone; // icones affichées dans la grille
     private ImageIcon icoPacman1;
@@ -76,8 +81,6 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private ImageIcon icoDead;
     private ImageIcon icoPastilleS;
     private ImageIcon icoPastilleL;
-    private ImageIcon icoLogoTransparent;
-    private ImageIcon icoLogoCouleur;
     private ImageIcon icoMur;
     private ImageIcon icoSpawn;
     private ImageIcon icoMurDroit1;
@@ -139,17 +142,23 @@ public class VueControleurPacMan extends JFrame implements Observer {
         return rotate;
     }
 
-    public VueControleurPacMan(int _sizeX, int _sizeY) {
+    public VueControleurPacMan(int _sizeX, int _sizeY) throws IOException {
         sizeX = _sizeX;
         sizeY = _sizeY;
         initialiserVueControleurPacMan();        
     }
     
-    public void initialiserVueControleurPacMan(){
+    public void initialiserVueControleurPacMan() throws IOException{
         chargerLesIcones();
         placerLesComposantsGraphiques();
         initialisationMusique();
-        ajouterEcouteurClavier();
+        ajouterEcouteurClavier(); 
+    }
+    public void initialiserFichiersTxt() throws IOException{
+        jeu.mapsString[0] = lireFichierTexte("Maps/classique");
+        jeu.mapsString[1] = lireFichierTexte("Maps/head");
+        String highscoreS = lireFichierTexte("Data/highscore");
+        highscore = Integer.valueOf(highscoreS.trim());
     }
 
     private void ajouterEcouteurClavier() {
@@ -238,8 +247,6 @@ public class VueControleurPacMan extends JFrame implements Observer {
         icoDead = chargerIcone("Images/dead.png", 0.0);
         icoPastilleS = chargerIcone("Images/pastilleS.png", 0.0);
         icoPastilleL = chargerIcone("Images/pastilleL.png", 0.0);
-        icoLogoTransparent = chargerIcone("Images/logoTransparent.png", 0.0);
-        icoLogoCouleur = chargerIcone("Images/logoCouleur.png", 0.0);
         icoCouloir = chargerIcone("Images/couloir.png", 0.0);
         icoMur = chargerIcone("Images/mur.png", 0.0);
         icoSpawn = chargerIcone("Images/spawn.png", 0.0);
@@ -314,7 +321,26 @@ public class VueControleurPacMan extends JFrame implements Observer {
         }
         return new ImageIcon(rotate(image,rotation));
     }
-
+    
+    public String lireFichierTexte(String nomFichier) throws FileNotFoundException, IOException{
+        BufferedReader in = new BufferedReader(new FileReader(nomFichier + ".txt"));
+        String texte = "";
+        String line = "";
+        while ((line = in.readLine()) != null)
+        {
+      // Afficher le contenu du fichier
+          texte = texte + "\n" + line;
+        }
+        in.close();
+        return texte;
+    }
+    
+    private void ecrireRecord(String record) throws IOException{
+        FileWriter out = new FileWriter("Data/highscore.txt");
+        out.write(record);
+        out.close(); 
+    }
+    
     private void placerLesComposantsGraphiques(){
         // Mise en place d'une icône
         ImageIcon icon = new ImageIcon("Images/icone.png");
@@ -611,7 +637,8 @@ public class VueControleurPacMan extends JFrame implements Observer {
             clipPacmanMort.stop();
             clipMusiqueFond.stop();
             clipGameOver.start();
-            JOptionPane.showMessageDialog(null, "Pacman est mort ! Votre score est de : " + score + " points", "GAME OVER", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Pacman est mort ! Votre score est de : " + score + " points" +"\nLe meilleur score est de : " + highscore, "GAME OVER", JOptionPane.WARNING_MESSAGE);
+            if (score > highscore) ecrireRecord(String.valueOf(score));
             System.exit(0);
         } 
         else if (jeu.getPacman().getMort()) {
@@ -661,9 +688,10 @@ public class VueControleurPacMan extends JFrame implements Observer {
             clipIntro.stop();
             clipGameOver.stop();
             String[] choices = {"Rejouer", "Changer de map", "Quitter"};
-            String input = (String) JOptionPane.showInputDialog(null, "BRAVO ! Vous avez gagné, votre score est : " + score,
+            String input = (String) JOptionPane.showInputDialog(null, "BRAVO ! Vous avez gagné, votre score est : " + score +"\nLe meilleur score est de : " + highscore,
             "Que voulez-vous faire ?", JOptionPane.QUESTION_MESSAGE, null, choices, // Array of choices
             choices[0]); // Initial choice
+            if (score > highscore) ecrireRecord(String.valueOf(score));
             if (null == input)System.exit(0);
             else switch (input) {
                 case "Rejouer":

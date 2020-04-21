@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 public class Jeu extends Observable implements Runnable {
 
     public int TIME = 0;
+    public String[] mapsString = {"", ""};
     private int numMap;
     public static final int SIZE_X = 20;
     public static final int SIZE_Y = 20;
@@ -48,7 +49,7 @@ public class Jeu extends Observable implements Runnable {
         numMap = 0;
     }
     
-    public void initialiserJeu() throws IOException{
+    public void initialiserJeu(){
         initialisationDesMaps();
         initialisationDesPastilles();
         initialisationDesEntites();
@@ -82,18 +83,7 @@ public class Jeu extends Observable implements Runnable {
         return pm;
     }
     
-    public String lireFichierTexte(String nomFichier) throws FileNotFoundException, IOException{
-        BufferedReader in = new BufferedReader(new FileReader("Maps/"+ nomFichier + ".txt"));
-        String texte = "";
-        String line = "";
-        while ((line = in.readLine()) != null)
-        {
-      // Afficher le contenu du fichier
-          texte = texte + "\n" + line;
-        }
-        in.close();
-        return texte;
-    }
+    
     public void replacerEntites(){
         grilleEntites = new Entite[SIZE_X][SIZE_Y];
         map = new  HashMap<Entite, Point>();
@@ -454,9 +444,9 @@ public class Jeu extends Observable implements Runnable {
         }
     }
     
-    public void initialisationDesMaps() throws IOException{ 
-        String mapClassiqueString = lireFichierTexte("classique");
-        String mapHeadString = lireFichierTexte("head");
+    public void initialisationDesMaps(){ 
+        String mapClassiqueString = mapsString[0];
+        String mapHeadString = mapsString[1];
         Mur mur;
         int index = 1;
         int[][][] mapClassique = new int[SIZE_X][SIZE_Y][2];
