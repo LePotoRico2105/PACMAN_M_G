@@ -1,6 +1,5 @@
 package VueControleur;
 
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -18,7 +17,6 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
@@ -112,11 +110,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
     private Clip clipMangerFantome;
     private Clip clipIntro;
     private Clip clipGameOver;
-    private FloatControl clipMusiqueFond_volume;
-    private FloatControl clipPacmanMort_volume;
-    private FloatControl clipMangerFantome_volume;
-    private FloatControl clipMangerPastille_volume;
-    private FloatControl clipSuperPacman_volume;
+
     
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associé à une icône, suivant ce qui est présent dans la partie modèle)
     
@@ -157,14 +151,11 @@ public class VueControleurPacMan extends JFrame implements Observer {
         initialisationMusique();
         ajouterEcouteurClavier();
     }
-    
 
     private void ajouterEcouteurClavier() {
-
         addKeyListener(new KeyAdapter() { // new KeyAdapter() { ... } est une instance de classe anonyme, il s'agit d'un objet qui correspond au controleur dans MVC
             @Override
             public void keyPressed(KeyEvent e) {
-                
                 switch(e.getKeyCode()) {  // on écoute les flèches de direction du clavier
                     case KeyEvent.VK_LEFT : 
                         if (!(jeu.regarderDansLaDirection(jeu.getPacman(), Direction.gauche) instanceof Mur))
@@ -182,12 +173,9 @@ public class VueControleurPacMan extends JFrame implements Observer {
                         if (!(jeu.regarderDansLaDirection(jeu.getPacman(), Direction.haut) instanceof Mur))
                         jeu.getPacman().setDirection(Direction.haut);
                     break;
-                }
-                
+                }      
             }
-
         });
-
     }
     
     public int choisirMap(){
@@ -278,6 +266,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
         clipMusiqueFond.loop(Clip.LOOP_CONTINUOUSLY);
         clipMusiqueFond.start();
     }
+    
     private void initialisationMusique(){
         try {
             audioGameOver = AudioSystem.getAudioInputStream(new File("Sounds/gameOver.wav").getAbsoluteFile());
