@@ -687,13 +687,13 @@ public class VueControleurPacMan extends JFrame implements Observer {
         if(finJeu){
             score = score + 1000;
             setTitle(" x " + jeu.getPacman().getNbVies() + " || SCORE : " + score);
-            clipMusiqueFond.stop();
-            clipSuperPacman.stop();
-            clipPacmanMort.stop();        
-            clipMangerPastille.stop();
-            clipMangerFantome.stop();
-            clipIntro.stop();
-            clipGameOver.stop();
+            if(clipMusiqueFond.isActive())clipMusiqueFond.stop();
+            if(clipSuperPacman.isActive())clipSuperPacman.stop();
+            if(clipPacmanMort.isActive())clipPacmanMort.stop();        
+            if(clipMangerPastille.isActive())clipMangerPastille.stop();
+            if(clipMangerFantome.isActive())clipMangerFantome.stop();
+            if(clipIntro.isActive())clipIntro.stop();
+            if(clipGameOver.isActive())clipGameOver.stop();
             clipVictoire.start();
             String[] choices = {"Rejouer", "Changer de map", "Quitter"};
             String input = (String) JOptionPane.showInputDialog(null, "BRAVO ! Vous avez gagné, votre score est : " + score +"\nLe meilleur score est de : " + highscore,
@@ -703,21 +703,23 @@ public class VueControleurPacMan extends JFrame implements Observer {
             if (null == input)System.exit(0);
             else switch (input) {
                 case "Rejouer":
+                    reinitialisationMusique();
                     int numMap = jeu.getMap();
                     jeu = new Jeu();
-                    reinitialisationMusique();
-                    initialiserVueControleurPacMan();
+                    initialiserVueControleurPacMan();               
                     jeu.choixMap(numMap);
+                    initialiserFichiersTxt();
                     jeu.initialiserJeu();
-                    jeu.start();
+                    jeu.start();  
                     break;
                 case "Changer de map":
-                    jeu = new Jeu();
-                    initialiserVueControleurPacMan();
                     reinitialisationMusique();
+                    jeu = new Jeu();
+                    initialiserVueControleurPacMan();  
                     jeu.choixMap(choisirMap());
+                    initialiserFichiersTxt();
                     jeu.initialiserJeu();
-                    jeu.start();
+                    jeu.start(); 
                     break;
                 case "Quitter":
                     System.exit(0);
