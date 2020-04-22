@@ -29,6 +29,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import modele.Direction;
 import modele.Fantome;
 import modele.Mur;
@@ -734,13 +735,12 @@ public class VueControleurPacMan extends JFrame implements Observer {
         mettreAJourAffichage();
         try {
             mettreAJourSonJeu();
-            /*
             SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
             mettreAJourAffichage();
             }
-            });*/
+            });
         } catch (IOException ex) {
             Logger.getLogger(VueControleurPacMan.class.getName()).log(Level.SEVERE, null, ex);
         }
