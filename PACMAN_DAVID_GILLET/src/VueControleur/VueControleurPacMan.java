@@ -695,6 +695,7 @@ public class VueControleurPacMan extends JFrame implements Observer {
             if(clipIntro.isActive())clipIntro.stop();
             if(clipGameOver.isActive())clipGameOver.stop();
             clipVictoire.start();
+            if(score > highscore) highscore = score;
             String[] choices = {"Rejouer", "Changer de map", "Quitter"};
             String input = (String) JOptionPane.showInputDialog(null, "BRAVO ! Vous avez gagné, votre score est : " + score +"\nLe meilleur score est de : " + highscore,
             "Que voulez-vous faire ?", JOptionPane.QUESTION_MESSAGE, null, choices, // Array of choices
